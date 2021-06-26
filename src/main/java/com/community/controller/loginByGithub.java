@@ -52,6 +52,7 @@ public class loginByGithub {
             GithubUser githubUser = gihubProvider.getUser(accessToken);
             if(githubUser != null){
                 //success
+                //将用户信息存储到数据库中git
                 User user = new User();
                 user.setName(githubUser.getName());
                 //唯一用户标识
