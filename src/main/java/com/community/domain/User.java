@@ -1,50 +1,19 @@
 package com.community.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
-/**
- * 
- * @TableName user
+import lombok.NoArgsConstructor;
+/*
+ *用户
  */
-@TableName(value ="user")
 @Data
-public class User implements Serializable {
-    /**
-     * 
-     */
-    @TableId
+@AllArgsConstructor
+@NoArgsConstructor
+public class User {
     private Integer id;
-
-    /**
-     * 
-     */
     private String name;
-
-    /**
-     * 
-     */
-    private String accountid;
-
-    /**
-     * 
-     */
+    private String accountId;
     private String token;
-
-    /**
-     * 
-     */
-    private Long gmtcreate;
-
-    /**
-     * 
-     */
-    private Long gmtmodified;
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
+    private long gmtCreate;
+    private long gmtModified;
 }
