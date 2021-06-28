@@ -13,4 +13,8 @@ public interface UserService {
 
     int deleteById(int id);
 
+    User findByToken(String token);
+
+    User findById(int id);
+
 }

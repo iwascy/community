@@ -13,12 +13,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.UUID;
 
 @Controller
-public class loginByGithub {
+public class LoginByGithub {
 
     @Autowired
     private GihubProvider gihubProvider;
@@ -39,7 +41,8 @@ public class loginByGithub {
     @GetMapping("/callback")
     public String callback(@RequestParam("code") String code,
                            @RequestParam("state") String state,
-                           HttpServletRequest request){
+                           HttpServletRequest request,
+                           HttpServletResponse response){
         try {
             AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
             accessTokenDTO.setCode(code);
@@ -56,16 +59,18 @@ public class loginByGithub {
                 User user = new User();
                 user.setName(githubUser.getName());
                 //唯一用户标识
-                user.setToken(UUID.randomUUID().toString());
+                String token = UUID.randomUUID().toString();
+                user.setToken(token);
                 user.setAccountId(String.valueOf(githubUser.getId()));
-                user.setGmtCreate(System.currentTimeMillis());
-                user.setGmtModified(user.getGmtCreate());
+                user.setCreateTime(System.currentTimeMillis());
+                user.setUpdateTime(user.getCreateTime());
                 userService.insert(user);
-                request.getSession().setAttribute("user",githubUser);
-                return "redirect:index";
+                //登录成功，写入cookie
+                response.addCookie(new Cookie("token",token));
+                return "redirect:/";
             }else{
                 request.setAttribute("error","登录失败，请重新登录。");
-                return "redirect:index";
+                return "redirect:/";
             }
         } catch (IOException e) {
             e.printStackTrace();

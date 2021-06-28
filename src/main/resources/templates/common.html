@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="commonheader">
+    <meta charset="UTF-8">
+    <title>微社区</title>
+    <link rel="stylesheet" href="./layui/css/layui.css">
+    <script src="layui/layui.js" charset="utf-8"></script>
+</head>
+<body>
+<!-- navigation -->
+<ul class="layui-nav"  th:fragment="commonnvg">
+    <li class="layui-nav-item " ><a href="/index">微社区</a></li>
+    <li class="layui-nav-item "><a href="">产品</a></li>
+    <li class="layui-nav-item " ><a href="/publish">提问</a></li>
+    <li class="layui-nav-item">
+        <a href="javascript:;">解决方案</a>
+        <dl class="layui-nav-child"> <!-- 二级菜单 -->
+            <dd><a href="">移动模块</a></dd>
+            <dd><a href="">后台模版</a></dd>
+            <dd><a href="">电商平台</a></dd>
+        </dl>
+    </li>
+    <li class="layui-nav-item" th:if="${session.user == null}"><a href="https://github.com/login/oauth/authorize?client_id=f5d6c15d0297d8f0bd88&redirect_uri=http://localhost:8080/callback&scope=user&state=1" methods="get">登录</a></li>
+    <li th:if="${session.user} != null" class="layui-nav-item" >
+        <a href=""><img src="//t.cn/RCzsdCq" class="layui-nav-img" th:text="${session.user.getName()}"></a>
+        <dl class="layui-nav-child">
+            <dd><a href="javascript:;">修改信息</a></dd>
+            <dd><a href="javascript:;">安全管理</a></dd>
+            <dd><a href="javascript:;">退了</a></dd>
+        </dl>
+    </li>
+</ul>
+<script th:fragment="commonsrc">
+    //注意：导航 依赖 element 模块，否则无法进行功能性操作
+    layui.use('element', function(){
+        var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+
+        //监听导航点击
+        element.on('nav(nav)', function(elem){
+            //console.log(elem)
+            layer.msg(elem.text());
+        });
+    });
+</script>
+</body>
+</html>

@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 @SpringBootTest
 class CommunityApplicationTests {
 
@@ -15,9 +17,8 @@ class CommunityApplicationTests {
 
     @Test
     void contextLoads() {
-        User user = new User(3,"jack","32","2323",1234,13213);
-        int result = userServiceImpl.insert(user);
-        System.out.println(result);
+        User user = userServiceImpl.findById(12);
+        System.out.println(user);
 
     }
 

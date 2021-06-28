@@ -14,6 +14,6 @@ public class User {
     private String name;
     private String accountId;
     private String token;
-    private long gmtCreate;
-    private long gmtModified;
+    private long createTime;
+    private long updateTime;
 }

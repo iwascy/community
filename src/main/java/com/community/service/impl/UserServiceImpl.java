@@ -22,4 +22,14 @@ public class UserServiceImpl implements UserService {
     public int deleteById(int id) {
         return userMapper.deleteById(id);
     }
+
+    @Override
+    public User findByToken(String token){
+        return userMapper.findByToken(token);
+    }
+
+    @Override
+    public User findById(int id) {
+        return userMapper.findById(id);
+    }
 }
