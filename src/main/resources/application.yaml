@@ -10,3 +10,7 @@ spring:
   thymeleaf:
     enabled: true
     encoding: UTF-8
+pagehelper:
+  auto-dialect: true
+  reasonable: true
+  support-methods-arguments: true

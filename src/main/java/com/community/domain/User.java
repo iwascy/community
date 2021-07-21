@@ -12,8 +12,9 @@ import lombok.NoArgsConstructor;
 public class User {
     private Integer id;
     private String name;
-    private String accountId;
+    private Integer accountId;
     private String token;
+    private String avatar;
     private long createTime;
     private long updateTime;
 }

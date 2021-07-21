@@ -1,31 +1,25 @@
 package com.community.controller;
 
 
-import com.community.domain.Question;
 import com.community.domain.User;
 import com.community.mapper.QuestionMapper;
 import com.community.mapper.UserMapper;
 import com.community.service.QuestionService;
 import com.community.service.UserService;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @Controller
-public class IndexController {
+public class PageController {
 
     @Autowired
     private UserMapper userMapper;
@@ -34,45 +28,36 @@ public class IndexController {
     private QuestionMapper questionMapper;
 
     @Autowired
-    private QuestionService questionService;
-
-    @Autowired
     private UserService userService;
 
-    @GetMapping({"/","/index"})
-    public String toIndex(HttpServletRequest request, HttpServletResponse response,
-                          HttpSession session, Model model){
+    @Autowired
+    private QuestionService questionService;
 
-        //登录
-        User user = userService.findUserByRequest(request);
-        if(user != null){
-            request.getSession().setAttribute("user",user);
-        }
+    @GetMapping("/index/page={pageNum}")
+    public String newPage(HttpServletRequest request, HttpServletResponse response,
+                          HttpSession session, Model model,
+                          @PathVariable(value = "pageNum",required = false) int pageNum){
+
         //分页
-        PageHelper.startPage(1,5);
+        PageHelper.startPage(pageNum,5);
         PageInfo pageInfo = new PageInfo(questionService.sortByLatestTime());
         model.addAttribute("userService",userService);
         model.addAttribute("pageInfo",pageInfo);
         model.addAttribute("info","latest");
-        return "/index";
+        return "index";
     }
 
-    @GetMapping("/popular")
-    public String newQuestoin(Model model){
-        PageHelper.startPage(1,5);
+    @GetMapping("/popular/page={pageNum}")
+    public String popularPage(HttpServletRequest request, HttpServletResponse response,
+                          HttpSession session, Model model,
+                          @PathVariable(value = "pageNum",required = false) int pageNum){
+
+        //分页
+        PageHelper.startPage(pageNum,5);
         PageInfo pageInfo = new PageInfo(questionService.sortByPopular());
         model.addAttribute("userService",userService);
         model.addAttribute("pageInfo",pageInfo);
         model.addAttribute("info","popular");
         return "/index";
-    }
-
-    @GetMapping("/test")
-    public String test(Model model){
-        PageHelper.startPage(1,5);
-        PageInfo pageInfo = new PageInfo(questionService.sortByLatestTime());
-        model.addAttribute("userService",userService);
-        model.addAttribute("pageInfo",pageInfo);
-        return "/test";
     }
 }

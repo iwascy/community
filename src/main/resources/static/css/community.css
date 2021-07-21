@@ -1,0 +1,88 @@
+.btn-center{
+    text-align: center;
+}
+
+.nav-right{
+    nav-right: auto;
+}
+
+.div-relative{
+    position: relative;
+}
+.div-bottom{
+    position: absolute;
+    left:0;
+    bottom: 5px;
+}
+
+
+.point {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 2px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 10px;
+    margin: 0px 0px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+.point1 {
+    background-color: #0066FF1A;
+    color: black;
+
+}
+
+.point1:hover {
+    background-color: #008CBA;
+    color: white;
+}
+.content{
+    padding-top: 15px;
+    padding-bottom: 10px;
+}
+
+.comment{
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+    border-bottom: 1px;
+}
+
+.author{
+    font-weight: bold;
+}
+
+.is-active{
+    font-weight: 500;
+    color: #06f;
+}
+.topNav{
+    height: 58px;
+    background-color: whitesmoke;
+    margin-bottom: 2px;
+}
+.topStory{
+
+}
+
+.topStoryFont{
+    align-items: center;
+    font-size: 16px;
+    margin: 0 22px;
+    color: black;
+}
+
+.topNa{
+    position:absolute;
+
+    z-index:1;
+}
+
+.setBottom{
+    position:absolute;
+    z-index:-1;
+}

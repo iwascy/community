@@ -2,7 +2,7 @@ package com.community.provider;
 
 import com.alibaba.fastjson.JSON;
 import com.community.dto.AccessTokenDTO;
-import com.community.dto.GithubUser;
+import com.community.dto.GithubUserDTO;
 import okhttp3.*;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +33,7 @@ public class GihubProvider {
         return null;
     }
     //传入用户的accessToken，用于获取用户的信息
-    public GithubUser getUser(String accessToken){
+    public GithubUserDTO getUser(String accessToken){
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url("https://api.github.com/user")
@@ -44,8 +44,8 @@ public class GihubProvider {
             Response response = client.newCall(request).execute();
             String responseBody = response.body().string();
             //将JSON格式的数据封装成一个对象
-            GithubUser githubUser = JSON.parseObject(responseBody, GithubUser.class);
-            return githubUser;
+            GithubUserDTO githubUserDTO = JSON.parseObject(responseBody, GithubUserDTO.class);
+            return githubUserDTO;
         } catch (IOException e) {
             e.printStackTrace();
         }

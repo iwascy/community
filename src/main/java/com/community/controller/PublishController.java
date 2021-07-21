@@ -2,8 +2,10 @@ package com.community.controller;
 
 import com.community.domain.Question;
 import com.community.domain.User;
-import com.community.service.impl.QuestionServiceImpl;
-import com.community.service.impl.UserServiceImpl;
+import com.community.mapper.QuestionMapper;
+import com.community.mapper.UserMapper;
+import com.community.service.QuestionService;
+import com.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,10 +24,13 @@ import javax.servlet.http.HttpSession;
 public class PublishController {
 
     @Autowired
-    private QuestionServiceImpl questionService;
+    private QuestionMapper questionMapper;
 
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
+
+    @Autowired
+    private QuestionService questionService;
 
     @GetMapping()
     public String getPublish(){
@@ -39,30 +44,12 @@ public class PublishController {
                           @RequestParam("tag") String tag,
                           @RequestParam("detail") String detail,
                             Model model){
-        HttpSession session = request.getSession();
-        Cookie[] cookies = request.getCookies();
-        String token= "";
-        if(cookies != null){
-            for (Cookie cookie : request.getCookies()) {
-                if(cookie.getName().equals("token")){
-                    token = cookie.getValue();
-                    break;
-                }
-            }
-        }
-        User user = userService.findByToken(token);
+        User user = userService.findUserByRequest(request);
         if(user == null){
             model.addAttribute("msg","请登录！");
             return "publish";
         }
-        Question question = new Question();
-        question.setCreator(user.getId());
-        question.setTitle(title);
-        question.setDetail(detail);
-        question.setTag(tag);
-        question.setCreateTime(System.currentTimeMillis());
-        question.setUpdateTime(question.getCreateTime());
-        questionService.insert(question);
+        questionService.PublishQuestion(user,title,detail,tag);
         return "redirect:index";
     }
 }

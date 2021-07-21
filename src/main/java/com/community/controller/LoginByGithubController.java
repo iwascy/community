@@ -3,12 +3,11 @@ package com.community.controller;
 
 import com.community.domain.User;
 import com.community.dto.AccessTokenDTO;
-import com.community.dto.GithubUser;
+import com.community.dto.GithubUserDTO;
+import com.community.mapper.UserMapper;
 import com.community.provider.GihubProvider;
-import com.community.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.info.GitProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,13 +19,13 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Controller
-public class LoginByGithub {
+public class LoginByGithubController {
 
     @Autowired
     private GihubProvider gihubProvider;
 
     @Autowired
-    UserServiceImpl userService;
+    UserMapper userMapper;
 
     @Value("${gihub.client.secret}")
     private String client_secret;
@@ -51,20 +50,28 @@ public class LoginByGithub {
             accessTokenDTO.setClient_id(client_id);
             accessTokenDTO.setClient_secret(client_secret);
             String accessToken = gihubProvider.getAccessToken(accessTokenDTO);
-            GihubProvider gihubProvider = new GihubProvider();
-            GithubUser githubUser = gihubProvider.getUser(accessToken);
-            if(githubUser != null){
+            //GihubProvider gihubProvider = new GihubProvider();
+            GithubUserDTO githubUserDTO = gihubProvider.getUser(accessToken);
+            if(githubUserDTO != null){
                 //success
                 //将用户信息存储到数据库中git
                 User user = new User();
-                user.setName(githubUser.getName());
                 //唯一用户标识
                 String token = UUID.randomUUID().toString();
-                user.setToken(token);
-                user.setAccountId(String.valueOf(githubUser.getId()));
-                user.setCreateTime(System.currentTimeMillis());
-                user.setUpdateTime(user.getCreateTime());
-                userService.insert(user);
+                //判断用户表是否有该用户
+                if(userMapper.getAccountIdCount(githubUserDTO.getId()) > 0){
+                    //修改token
+                    userMapper.updateTokenByAccountId(token, githubUserDTO.getId());
+                }else{
+                    //增加用户
+                    user.setName(githubUserDTO.getName());
+                    user.setToken(token);
+                    user.setAccountId(githubUserDTO.getId());
+                    user.setAvatar(githubUserDTO.getAvatarUrl());
+                    user.setCreateTime(System.currentTimeMillis());
+                    user.setUpdateTime(user.getCreateTime());
+                    userMapper.insert(user);
+                }
                 //登录成功，写入cookie
                 response.addCookie(new Cookie("token",token));
                 return "redirect:/";
