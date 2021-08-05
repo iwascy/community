@@ -12,6 +12,6 @@ public class Question {
     private Integer creator;
     private Integer commentCount;
     private Integer viewCount;
-    private Integer likeCount;
+    private Integer praiseCount;
     private String tag;
 }

@@ -40,4 +40,10 @@ public class QuestionPageController {
         return "question";
     }
 
+    @GetMapping("/question/{id}/delete")
+    public String deleteQuestion(@PathVariable("id") int questionId){
+        questionService.delete(questionId);
+        return "redirect:/index";
+    }
+
 }

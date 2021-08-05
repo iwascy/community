@@ -86,3 +86,12 @@
     position:absolute;
     z-index:-1;
 }
+
+.like{
+    background-color: lightskyblue;
+}
+
+.current{
+    font-weight: bold;
+    color: royalblue;
+}

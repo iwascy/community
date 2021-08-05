@@ -10,6 +10,7 @@
     <script src="/js/bootstrap.js"></script>
     <script src="/js/community.js"></script>
     <script src="/js/jquery-3.6.0.js"></script>
+    <link rel="stylesheet" href="/css/community.css">
 </head>
 <body>
 <!-- navigation -->
@@ -33,7 +34,7 @@
             </li>
             <li class="layui-nav-item pull-right" th:if="${session.user == null}"><a href="https://github.com/login/oauth/authorize?client_id=f5d6c15d0297d8f0bd88&redirect_uri=http://localhost:8080/callback&scope=user&state=1" methods="get">登录</a></li>
             <li th:if="${session.user} != null" class="layui-nav-item pull-right" >
-                <a th:href="'/people/'+${session.user.id}"><img th:src="${session.user.getAvatar()}" class="layui-nav-img" th:text="${session.user.getName()}"></a>
+                <a th:href="'/people/'+${session.user.id}"><img class="layui-nav-img" th:text="${session.user.getName()}"></a>
                 <dl class="layui-nav-child topNa">
                     <dd><a href="/myquestion">发布的问题</a></dd>
                     <dd><a href="javascript:;">安全管理</a></dd>
@@ -55,7 +56,7 @@
                         </h3>
                         <p th:text="${userService.findUserNameById(question.getCreator())}+'：'+${question.getDetail()}" class="layui-font-black" ></p>
                         <p class="layui-font-gray">
-                            <i class="layui-icon layui-icon-praise" th:text="${question.getLikeCount()}"></i>
+                            <i class="layui-icon layui-icon-praise" th:text="${question.getPraiseCount()}"></i>
                             <i class="layui-icon layui-icon-reply-fill" th:text="${question.getCommentCount()}+'条评论'"></i>
                             <i class="layui-icon layui-icon-user" th:text="${question.getViewCount()}+'浏览'"></i> </p>
                     </div>

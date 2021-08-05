@@ -9,16 +9,18 @@
     <script src="/layui/layui.js" charset="utf-8"></script>
     <script src="/js/jquery-3.6.0.js"></script>
     <link rel="stylesheet" href="/css/community.css">
+    <script src="/js/community.js"></script>
 </head>
 <body>
+<input type="hidden" id="userId" th:value="${session.user == null ? null : session.user.id}">
 <div th:replace="common :: commonnvg"></div>
 <div class="setBottom layui-col-lg7 col-lg-offset-1">
     <div>
         <div class="topNav" style="background: white">
             <div style="padding-top: 18px">
-                <a class="topStoryFont topStory" href="/index">最新</a>
-                <a class="topStoryFont topStory" href="/popular">热门</a>
-                <a class="topStoryFont topStory" href="#">关注</a>
+                <a class="topStoryFont topStory" th:classappend="${info == 'latest' ? 'current' : ''}" href="/index">最新</a>
+                <a class="topStoryFont topStory" th:classappend="${info == 'popular' ? 'current' : ''}" href="/popular">热门</a>
+                <a class="topStoryFont topStory" th:classappend="${info == 'follow' ? 'current' : ''}" href="/follow">关注</a>
             </div>
         </div>
         <div class="layui-row" >
@@ -35,7 +37,16 @@
                                 <span th:text="${question.getDetail()}"></span>
                             </div>
                             <p class="layui-font-gray">
-                                <button class="point point1" onclick="" th:text="'赞同'+${question.getLikeCount()}"></button>
+                                <span th:if="${session.user == null}">
+                                    <button class="point point1" th:href="@{login.html}" th:text="'赞同 '+${question.getPraiseCount()}" th:question-id="${question.id}" th:id="${'question-'+question.id}">
+                                        <span th:value="${question.getPraiseCount()}"></span>
+                                    </button>
+                                </span>
+
+                                <span th:if="${session.user != null}">
+                                    <button class="point point1" th:classappend="${praiseService.alreadyPraise(session.user.id,question.getId())} == true ? 'like' : ''" onclick="addPraise(this)" th:text="'赞同 '+${question.getPraiseCount()}" th:question-id="${question.id}" th:id="${'question-'+question.id}"></button>
+                                </span>
+
                                 <i class="layui-icon layui-icon-reply-fill" style="font-size: 8px" th:text="${question.getCommentCount()}+'条评论'"></i>
                                 <i class="layui-icon layui-icon-user" style="font-size: 8px" th:text="${question.getViewCount()}+'浏览'"></i> </p>
                         </div>
@@ -73,7 +84,26 @@
                     </li>
                     <li><a href="/popular">首页</a></li>
                     <li th:each="page : ${pageInfo.getNavigatepageNums()}"><a th:href="@{'/popular/page='+${page}}" th:text="${page}"></a></li>
-                    <li><a th:href="@{'/index/page='+${pageInfo.getNavigateLastPage()}}">尾页</a></li>
+                    <li><a th:href="@{'/popular/page='+${pageInfo.getNavigateLastPage()}}">尾页</a></li>
+                    <li>
+                        <a href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div th:if="${info == 'follow'}">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li>
+                        <a href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li><a href="/follow">首页</a></li>
+                    <li th:each="page : ${pageInfo.getNavigatepageNums()}"><a th:href="@{'/follow/page='+${page}}" th:text="${page}"></a></li>
+                    <li><a th:href="@{'/follow/page='+${pageInfo.getNavigateLastPage()}}">尾页</a></li>
                     <li>
                         <a href="#" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>

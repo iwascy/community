@@ -56,11 +56,23 @@ public class QuestionService {
     }
 
 
-    public void addLikeCount(int questionId){
-        questionMapper.addLikeCount(questionId);
+    public void addPraiseCount(int questionId){
+        questionMapper.addPraiseCount(questionId);
     }
 
-    public void reduceLikeCount(int questionId){
-        questionMapper.reduceLikeCount(questionId);
+    public void reducePraiseCount(int questionId){
+        questionMapper.reducePraiseCount(questionId);
     }
+
+    public void delete(int questionId) {
+        questionMapper.deleteById(questionId);
+    }
+
+    public List<Question> findQuestionByFollow(int user){
+        return questionMapper.findQuestionByFollow(user);
+    }
+
+    public int praiseCountById(int id){
+        return questionMapper.findPraiseCount(id);
+    };
 }

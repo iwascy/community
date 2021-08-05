@@ -1,10 +1,7 @@
 package com.community.mapper;
 
 import com.community.domain.Question;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -29,8 +26,8 @@ public interface QuestionMapper {
     @Select("select view_count from question where id = #{id}")
     int findViewCount(int id);
 
-    @Select("select like_count from question where id = #{id}")
-    int findLikeCount(int id);
+    @Select("select praise_count from question where id = #{id}")
+    int findPraiseCount(int id);
 
     @Select("select detail from question where id = #{id}")
     String findDetail(int id);
@@ -71,12 +68,19 @@ public interface QuestionMapper {
     /*
     增加一个点赞数
      */
-    @Update("update question set like_count = like_count+1 where id = #{id}")
-    void addLikeCount(int id);
+    @Update("update question set praise_count = praise_count+1 where id = #{id}")
+    void addPraiseCount(int id);
 
     /*
     删除一个点赞数
      */
-    @Update("update question set like_count = like_count-1 where id = #{id}")
-    void reduceLikeCount(int id);
+    @Update("update question set praise_count = praise_count-1 where id = #{id}")
+    void reducePraiseCount(int id);
+
+    @Delete("delete from question where id = #{questionId}")
+    void deleteById(int questionId);
+
+    @Select("select * from question where creator in(select user_followed from follow where user = #{user}) order by update_time desc")
+    List<Question> findQuestionByFollow(int user);
+
 }

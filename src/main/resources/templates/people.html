@@ -18,6 +18,13 @@
                  padding-top: 1px;
                  padding-left: 40px">
                 <h1 th:text="${session.user.name}"></h1>
+                <input type="hidden" th:id="${session.user == null ? null : 'id'}" th:value="${session.user.id}">
+                <input type="hidden" id="follow-status" th:value="${followService.followStatus(session.user.id,people)}">
+                <input type="hidden" id="user-followed" th:value="${people}">
+                <!--未关注-->
+                <button th:id="fw" onclick="follow(this)" th:if="${session.user == null || !followService.followStatus(session.user.id,people)}" class="point point1">关注</button>
+                <!--已关注-->
+                <button th:id="fw" onclick="follow(this)" th:if="${session.user != null && followService.followStatus(session.user.id,people)}" th:classappend="${session.user.id != null && followService.followStatus(session.user.id,people)  ? '' : 'like'}" class="point point1 like" >已关注</button>
             </div>
         </div>
         <div style="height: 10px"></div>
@@ -37,7 +44,6 @@
                     <span th:text="${question.getDetail()}"></span>
                 </div>
                 <p class="layui-font-gray">
-                    <button class="point point1" onclick="" th:text="'赞同'+${question.getLikeCount()}"></button>
                     <i class="layui-icon layui-icon-reply-fill" style="font-size: 8px" th:text="${question.getCommentCount()}+'条评论'"></i>
                     <i class="layui-icon layui-icon-user" style="font-size: 8px" th:text="${question.getViewCount()}+'浏览'"></i> </p>
             </div>

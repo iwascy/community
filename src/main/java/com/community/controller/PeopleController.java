@@ -2,6 +2,8 @@ package com.community.controller;
 
 import com.community.domain.Question;
 import com.community.domain.User;
+import com.community.dto.PeopleInfoDTO;
+import com.community.service.FollowService;
 import com.community.service.QuestionService;
 import com.community.service.UserService;
 import com.github.pagehelper.PageHelper;
@@ -9,8 +11,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class PeopleController {
@@ -21,6 +22,9 @@ public class PeopleController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private FollowService followService;
+
     @GetMapping("/people/{accountId}")
     public String people(@PathVariable("accountId") int id,
                          Model model){
@@ -28,6 +32,16 @@ public class PeopleController {
         PageInfo pageInfo = new PageInfo(questionService.findQuestionByUser(id));
         model.addAttribute("pageInfo",pageInfo);
         model.addAttribute("userService",userService);
+        model.addAttribute("followService",followService);
+        model.addAttribute("people",id);
         return "people";
+    }
+
+    @ResponseBody
+    @PostMapping("/addFollow")
+    public String Follow(@RequestParam int user,
+                         @RequestParam int userFollowed){
+        followService.follow(user,userFollowed);
+        return "";
     }
 }

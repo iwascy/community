@@ -20,9 +20,6 @@ function post(){
             "content":content,
             "type":0
         }),
-        success:function (){
-            window.open("www.baidu.com")
-        },
         dataType:"json"
     });
     setTimeout(function (){
@@ -62,7 +59,6 @@ function second(){
 function collapseComment(e){
     var id = e.getAttribute("data-id")
     var comments = $("#comment-"+id);
-
     var collapse = e.getAttribute("data-collapse");
     if(collapse){
         comments.removeClass("in");
@@ -92,61 +88,61 @@ function replyComment(e){
 /*
 *点赞
  */
-function like(){
-
+function addPraise(e) {
+    var user = $("#userId").val();
+    var id = e.getAttribute("question-id");
+    var question = $("#question-" + id);
+    var box = document.getElementById('question-' + id);
+    var count ;
+    $.ajax({
+        type: "POST",
+        url: "/praise",
+        data: JSON.stringify({
+            "user": user,
+            "question": id,
+        }),
+        contentType: "application/json",
+        dataType:"json",
+        cache:false,
+        async:false,
+        success:function (result) {
+            count = result.count;
+        }
+    });
+    var status = e.getAttribute("ifLike");
+    if (status || question.hasClass("like")) {
+        question.removeClass("like");
+        e.removeAttribute("ifLike");
+        box.innerText = '赞同 ' + (count);
+    } else {
+        question.addClass("like")
+        e.setAttribute("ifLike", "like")
+        box.innerText = '赞同 ' + (count);
+    }
 }
 
-    layui.use('element', function(){
-    var $ = layui.jquery
-    ,element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
-
-    //触发事件
-    var active = {
-    tabAdd: function(){
-    //新增一个Tab项
-    element.tabAdd('demo', {
-    title: '新选项'+ (Math.random()*1000|0) //用于演示
-    ,content: '内容'+ (Math.random()*1000|0)
-    ,id: new Date().getTime() //实际使用一般是规定好的id，这里以时间戳模拟下
-})
-}
-    ,tabChange: function(){
-    //切换到指定Tab项
-    element.tabChange('demo', '22'); //切换到：用户管理
-}
-};
-
-    $('.site-demo-active').on('click', function(){
-    var othis = $(this), type = othis.data('type');
-    active[type] ? active[type].call(this, othis) : '';
-});
-
-    //Hash地址的定位
-    var layid = location.hash.replace(/^#test=/, '');
-    element.tabChange('test', layid);
-    element.on('tab(test)', function(elem){
-    location.hash = 'test='+ $(this).attr('lay-id');
-});
-
-});
-
-
-function addLike(){
-    var questionId = $("#question_id").val();
-    var userId = $("#account_id").val();
+function follow(e){
+    //var status = $("#follow-status").val();
+    var user = $("#id").val();
+    var userFollowed = $("#user-followed").val();
+    var fw = $("#fw");
+    var fwbox = document.getElementById('fw');
     $.ajax({
         type:"POST",
-        url:"/question/"+questionId+"/comment",
-        contentType:'application/json',
-        data:JSON.stringify({
-            "commentator":accountId,
-            "questionId":questionId,
-            "content":content,
-            "type":type
+        url:"/addFollow",
+        data:({
+            "user":user,
+            "userFollowed":userFollowed,
         }),
-        success:function (response){
-            console.log(response);
-        },
-        dataType:"json"
     });
+    var status = e.getAttribute("ifLike");
+    if(status == 'like' || fw.hasClass('like')){
+        fw.removeClass("like");
+        e.removeAttribute("ifLike");
+        fwbox.innerText='关注';
+    }else{
+        fw.addClass("like")
+       fwbox.innerText='已关注';
+        e.setAttribute("ifLike","like")
+    }
 }

@@ -5,6 +5,7 @@ import com.community.domain.Question;
 import com.community.domain.User;
 import com.community.mapper.QuestionMapper;
 import com.community.mapper.UserMapper;
+import com.community.service.PraiseService;
 import com.community.service.QuestionService;
 import com.community.service.UserService;
 import com.github.pagehelper.Page;
@@ -39,6 +40,9 @@ public class IndexController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private PraiseService praiseService;
+
     @GetMapping({"/","/index"})
     public String toIndex(HttpServletRequest request, HttpServletResponse response,
                           HttpSession session, Model model){
@@ -54,7 +58,8 @@ public class IndexController {
         model.addAttribute("userService",userService);
         model.addAttribute("pageInfo",pageInfo);
         model.addAttribute("info","latest");
-        return "/index";
+        model.addAttribute("praiseService",praiseService);
+        return "index";
     }
 
     @GetMapping("/popular")
@@ -64,15 +69,19 @@ public class IndexController {
         model.addAttribute("userService",userService);
         model.addAttribute("pageInfo",pageInfo);
         model.addAttribute("info","popular");
-        return "/index";
+        model.addAttribute("praiseService",praiseService);
+        return "index";
     }
 
-    @GetMapping("/test")
-    public String test(Model model){
+    @GetMapping("/follow")
+    public String follow(HttpServletRequest request,Model model){
         PageHelper.startPage(1,5);
-        PageInfo pageInfo = new PageInfo(questionService.sortByLatestTime());
+        User user = (User) request.getSession().getAttribute("user");
+        PageInfo pageInfo = new PageInfo(questionService.findQuestionByFollow(user.getId()));
         model.addAttribute("userService",userService);
         model.addAttribute("pageInfo",pageInfo);
-        return "/test";
+        model.addAttribute("info","follow");
+        model.addAttribute("praiseService",praiseService);
+        return "index";
     }
 }

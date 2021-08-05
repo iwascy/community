@@ -21,7 +21,7 @@
                         <img style="padding-right: 2px" th:src="${userService.findAvatarById(question.getCreator())}" width="20px" height="20px">
                         <a href="#" th:text="'作者：'+${userService.findUserNameById(question.getCreator())}" style="color: black"></a>
                         <a th:if="${session.user} != null and ${session.user.getId()} == ${question.getCreator()}" th:href="@{'/question/'+${question.getId()}+'/edit'}" >编辑文章</a>
-                        <a>删除</a>
+                        <a th:href="@{'/question/'+ ${question.getId()} + '/delete'} ">删除</a>
                     </span>
                     <input type="hidden" name="questionId" th:value="${question.getId()}">
                     <hr class="layui-border-gray">
