@@ -1,6 +1,8 @@
 package com.community.interceptor;
 
 import com.community.domain.User;
+import com.community.service.NotificationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,11 +15,14 @@ import javax.servlet.http.HttpSession;
 @Component
 public class LoginInterceptor implements HandlerInterceptor {
 
+    @Autowired
+    private NotificationService notificationService;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,Object handler) throws Exception{
         HttpSession session = request.getSession();
-        Object user = session.getAttribute("user");
+        User user = (User)session.getAttribute("user");
         if(user != null){
+            request.getSession().setAttribute("notificationCount",notificationService.notificationCount(user.getId()));
             return true;
         }
         session.setAttribute("msg","请登录！");

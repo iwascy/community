@@ -2,6 +2,7 @@ package com.community.service;
 
 import com.community.domain.Comment;
 import com.community.dto.CommentDTO;
+import com.community.enums.NotificationEnum;
 import com.community.mapper.CommentMapper;
 import com.community.mapper.QuestionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class CommentService {
     @Autowired
     private QuestionMapper questionMapper;
 
+    @Autowired
+    private NotificationService notificationService;
+
     @Transactional
     public void addComment(CommentDTO commentDTO){
         Comment comment = new Comment();
@@ -31,6 +35,8 @@ public class CommentService {
         commentMapper.insert(comment);
         questionMapper.setUpdateTime(comment.getCreateTime(),comment.getQuestionId());
         questionMapper.addCommentCount(commentDTO.getQuestionId());
+        int userCommented = questionMapper.findCreatorByQuestion(commentDTO.getQuestionId());
+        notificationService.addNotification(comment.getCommentator(),userCommented, NotificationEnum.REPLY_QUESTION.getType(), commentDTO.getQuestionId());
     }
 
     public List<Comment> findQuestionComment(int questionId){

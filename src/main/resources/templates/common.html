@@ -9,8 +9,9 @@
     <link rel="stylesheet" href="/css/bootstrap.css">
     <script src="/js/bootstrap.js"></script>
     <script src="/js/community.js"></script>
-    <script src="/js/jquery-3.6.0.js"></script>
     <link rel="stylesheet" href="/css/community.css">
+    <script src="../js/jquery-3.6.0.js"></script>
+
 </head>
 <body>
 <!-- navigation -->
@@ -32,6 +33,7 @@
                 <input type="text" style="height: 27px;width: 300px;border-color: gainsboro;background-color: #3a3d48" placeholder="搜索">
                 <button class="layui-btn layui-btn-sm layui-btn-primary layui-border-blue" type="submit">搜索</button>
             </li>
+
             <li class="layui-nav-item pull-right" th:if="${session.user == null}"><a href="https://github.com/login/oauth/authorize?client_id=f5d6c15d0297d8f0bd88&redirect_uri=http://localhost:8080/callback&scope=user&state=1" methods="get">登录</a></li>
             <li th:if="${session.user} != null" class="layui-nav-item pull-right" >
                 <a th:href="'/people/'+${session.user.id}"><img class="layui-nav-img" th:text="${session.user.getName()}"></a>
@@ -41,6 +43,9 @@
                     <dd><a href="javascript:;">退了</a></dd>
                 </dl>
             </li>
+            <li class="layui-nav-item pull-right" th:if="${session.user != null}">
+            <a href="">通知<span class="layui-badge" th:text="${session.notificationCount}"></span></a>
+        </li>
         </ul>
     </div>
 </div>

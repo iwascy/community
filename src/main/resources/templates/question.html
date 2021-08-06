@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <div th:replace="common :: commonheader"></div>
+    <script src="../js/editormd.min.js"></script>
+    <script src="../js/lib/marked.min.js"></script>
+    <script src="../js/lib/prettify.min.js"></script>
 </head>
 <body class="layui-bg-gray">
 <div th:replace="common :: commonnvg"></div>
@@ -25,10 +28,18 @@
                     </span>
                     <input type="hidden" name="questionId" th:value="${question.getId()}">
                     <hr class="layui-border-gray">
-                    <div style="height: 300px">
-                        <p th:text="${question.getDetail()}"></p>
-                        <div style="color: darkgray" th:text="'编辑于：'+${#dates.format(question.getUpdateTime(),'yyyy-MM-dd HH:mm')}"></div>
+                    <!--问题内容-->
+                    <div style="height: 300px" id="question-content">
+                        <!--<p th:text="${question.getDetail()}"></p>-->
+                        <!--<div style="color: darkgray" th:text="'编辑于：'+${#dates.format(question.getUpdateTime(),'yyyy-MM-dd HH:mm')}"></div>-->
+                        <textarea style="display:none;" th:text="${question.getDetail()}"></textarea>
                     </div>
+                    <script type="text/javascript">
+                        $(function() {
+                            var testView = editormd.markdownToHTML("question-content", {
+                            });
+                        });
+                    </script>
                 </div>
             </div>
         </div>

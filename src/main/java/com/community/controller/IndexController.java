@@ -1,10 +1,12 @@
 package com.community.controller;
 
 
+import com.community.domain.Notification;
 import com.community.domain.Question;
 import com.community.domain.User;
 import com.community.mapper.QuestionMapper;
 import com.community.mapper.UserMapper;
+import com.community.service.NotificationService;
 import com.community.service.PraiseService;
 import com.community.service.QuestionService;
 import com.community.service.UserService;
@@ -42,6 +44,9 @@ public class IndexController {
 
     @Autowired
     private PraiseService praiseService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @GetMapping({"/","/index"})
     public String toIndex(HttpServletRequest request, HttpServletResponse response,

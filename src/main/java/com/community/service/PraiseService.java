@@ -10,6 +10,9 @@ public class PraiseService {
     @Autowired
     private PraiseMapper praiseMapper;
 
+    @Autowired
+    private NotificationService notificationService;
+
     public boolean addPraise(Praise praise){
         if(alreadyPraise(praise.getUser(),praise.getQuestion())){
             praiseMapper.deletePraiseByUserAndQuestion(praise.getUser(),praise.getQuestion());

@@ -83,4 +83,10 @@ public interface QuestionMapper {
     @Select("select * from question where creator in(select user_followed from follow where user = #{user}) order by update_time desc")
     List<Question> findQuestionByFollow(int user);
 
+    @Select("select title from question where id = #{id}")
+    String findTitleById(int id);
+
+    @Select("select creator from question where id = #{questionId}")
+    int findCreatorByQuestion(int questionId);
+
 }
