@@ -1,6 +1,8 @@
 package com.community.service;
 
+import com.community.enums.NotificationEnum;
 import com.community.mapper.FollowMapper;
+import com.community.mapper.NotificationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +11,9 @@ import org.springframework.stereotype.Service;
 public class FollowService {
     @Autowired
     private FollowMapper followMapper;
+
+    @Autowired
+    private NotificationMapper notificationMapper;
 
     public void addFollow(int user,int userFollowed){
         long createTime = System.currentTimeMillis();
@@ -30,6 +35,7 @@ public class FollowService {
             deleteFollow(user,userFollowed);
         }else {
             addFollow(user,userFollowed);
+            notificationMapper.insertNotification(user,userFollowed, NotificationEnum.FOLLOW_USER.getType(), 0,-1,System.currentTimeMillis());
         }
     }
 }

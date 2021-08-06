@@ -37,6 +37,8 @@ public interface NotificationMapper {
     List<Notification> findNotificationReaded(int userNotified);
 
 
+    @Delete("delete from notification where notifier = #{notifier} and user_notified = #{userNotified} and type = #{type} and outer_id = #{outerId}")
+    void deleteNotification(int notifier,int userNotified,int type,int outerId);
 
 
 }
