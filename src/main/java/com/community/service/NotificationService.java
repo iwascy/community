@@ -29,16 +29,23 @@ public class NotificationService {
 
     public List<NotificationDTO> notificationContent(int user){
         List<NotificationDTO> notificationDTOList = new ArrayList();
-        List<Notification> notificationList = notificationMapper.findNotificationNotRead(user);
+        List<Notification> notificationList = notificationMapper.findNotification(user);
         int notificationCount = notificationList.size();  //未读通知数量
         for (int i = 0; i < notificationCount; i++) {
             Notification notification = notificationList.get(i);
-            String title = questionMapper.findTitleById(notification.getOuterId());
-            long time = notification.getCreateTime();
             int type = notification.getType();
+            String title = "";
+            if(type == 3){
+                title = "你";
+            }else{
+                title = questionMapper.findTitleById(notification.getOuterId());
+            }
+            long time = notification.getCreateTime();
             String replyType = NotificationEnum.typeString(type);
             int userNotified = notification.getUserNotified();
             NotificationDTO notificationDTO= new NotificationDTO();
+            notificationDTO.setNotifier(notification.getNotifier());
+            notificationDTO.setQuestionId(notification.getOuterId());
             notificationDTO.setNotifierName(userMapper.findUserNameById(userNotified));
             notificationDTO.setTitle(title);
             notificationDTO.setTime(time);
@@ -50,5 +57,9 @@ public class NotificationService {
 
     public int notificationCount(int user){
         return notificationMapper.findNotificationCount(user);
+    }
+
+    public void readNotification(int user){
+        notificationMapper.setNotificationStatusTrue(user);
     }
 }

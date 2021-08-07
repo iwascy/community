@@ -146,3 +146,15 @@ function follow(e){
         e.setAttribute("ifLike","like")
     }
 }
+
+function readNotification(){
+    var user = $("#userId").val();
+    $.ajax({
+        type:"GET",
+        url:"/notification/"+user,
+        data:({
+            "status":true,
+        })
+
+    });
+}

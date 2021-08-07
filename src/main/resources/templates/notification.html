@@ -18,7 +18,7 @@
                  padding-top: 1px;
                  padding-left: 40px">
                 <h1 th:text="${session.user.name}"></h1>
-                <input type="hidden" th:id="${session.user == null ? null : 'id'}" th:value="${session.user.id}">
+                <input type="hidden" th:id="${session.user == null ? '' : 'id'}" th:value="${session.user.id}">
                 <input type="hidden" id="follow-status" th:value="${followService.followStatus(session.user.id,people)}">
                 <input type="hidden" id="user-followed" th:value="${people}">
                 <!--未关注-->
@@ -33,20 +33,17 @@
             <a class="topStoryFont topStory" th:classappend="${nav == 'notification' ? 'current' : ''}" th:href="@{'/people/'+${session.user.id}+'/notification'}">通知</a>
         </div>
         <div style="height: 2px"></div>
-        <div th:each="question : ${pageInfo.getList()}" >
+        <div th:each="notification : ${notificationDTOList}" >
             <div class="layui-card">
             <div class="layui-card-body" >
                 <div>
-                    <small style="color: #ffffff;font-weight: normal;font-size: 12px;padding: 0 3px;border-radius: 2px;background-color: #f68b83;display: inline-block;height: 18px;">问题</small>
-                    <a class="layui-font-black" style="font-size: 25px;font-weight: bold" th:href="@{'/question/'+${question.getId()}}"  th:text="${question.getTitle()}"></a>
-                </div>
-                <div class="content">
-                    <span style="font-weight: bold" th:text="${userService.findUserNameById(question.getCreator())}+'：'" class="layui-font-black" ></span>
-                    <span th:text="${question.getDetail()}"></span>
+                    <a class="title-btn">通知</a>
+                    <a th:href="'/people/'+${notification.getNotifier()}" th:text="${notification.getNotifierName()}"></a>
+                    <span style="color: gray" th:text="${' '+notification.getType()+' '}"></span>
+                    <a th:href="'/question/'+${notification.getQuestionId()}" th:text="${notification.getTitle()}"></a>
+                    <span  class="pull-right" th:text="${#dates.format(notification.getTime(),'yyyy-MM-dd HH:mm')}"></span>
                 </div>
                 <p class="layui-font-gray">
-                    <i class="layui-icon layui-icon-reply-fill" style="font-size: 8px" th:text="${question.getCommentCount()}+'条评论'"></i>
-                    <i class="layui-icon layui-icon-user" style="font-size: 8px" th:text="${question.getViewCount()}+'浏览'"></i> </p>
             </div>
         </div>
         </div>

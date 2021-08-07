@@ -27,18 +27,20 @@ public interface NotificationMapper {
     /*
     未读通知
      */
-    @Select("select * from notification where user_notified = #{userNotified} and status = 0")
+    @Select("select * from notification where user_notified = #{userNotified} and status = 0 order by create_time desc")
     List<Notification> findNotificationNotRead(int userNotified);
 
     /*
     已读通知
      */
-    @Select("select * from notification where user_notified = #{userNotified} and status = 1")
-    List<Notification> findNotificationReaded(int userNotified);
+    @Select("select * from notification where user_notified = #{userNotified} order by create_time desc" )
+    List<Notification> findNotification(int userNotified);
 
 
-    @Delete("delete from notification where notifier = #{notifier} and user_notified = #{userNotified} and type = #{type} and outer_id = #{outerId}")
+    @Delete("delete from notification where user_notified = #{userNotified} and type = #{type} and outer_id = #{outerId}")
     void deleteNotification(int notifier,int userNotified,int type,int outerId);
 
 
+    @Delete("update notification set status = 1 where user_notified = #{userNotified} and status = 0 ")
+    void setNotificationStatusTrue(int userNotified);
 }

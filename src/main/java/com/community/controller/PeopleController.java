@@ -2,8 +2,10 @@ package com.community.controller;
 
 import com.community.domain.Question;
 import com.community.domain.User;
+import com.community.dto.NotificationDTO;
 import com.community.dto.PeopleInfoDTO;
 import com.community.service.FollowService;
+import com.community.service.NotificationService;
 import com.community.service.QuestionService;
 import com.community.service.UserService;
 import com.github.pagehelper.PageHelper;
@@ -12,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 public class PeopleController {
@@ -25,6 +29,9 @@ public class PeopleController {
     @Autowired
     private FollowService followService;
 
+    @Autowired
+    private NotificationService notificationService;
+
     @GetMapping("/people/{accountId}")
     public String people(@PathVariable("accountId") int id,
                          Model model){
@@ -34,6 +41,7 @@ public class PeopleController {
         model.addAttribute("userService",userService);
         model.addAttribute("followService",followService);
         model.addAttribute("people",id);
+        model.addAttribute("nav","people");
         return "people";
     }
 
@@ -44,4 +52,5 @@ public class PeopleController {
         followService.follow(user,userFollowed);
         return "";
     }
+
 }

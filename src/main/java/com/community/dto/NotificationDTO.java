@@ -8,4 +8,6 @@ public class NotificationDTO {
     private long time;
     private String notifierName;
     private String type;
+    private int notifier;
+    private int questionId;
 }

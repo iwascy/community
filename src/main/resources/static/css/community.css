@@ -95,3 +95,13 @@
     font-weight: bold;
     color: royalblue;
 }
+
+.title-btn{
+    font-weight: normal;
+    font-size: 12px;
+    padding: 0 3px;
+    border-radius: 2px;
+    background-color: #f68b83;
+    display: inline-block;
+    height: 18px;
+}

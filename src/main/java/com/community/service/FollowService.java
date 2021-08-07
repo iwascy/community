@@ -33,6 +33,7 @@ public class FollowService {
     public void follow(int user,int userFollowed){
         if(followStatus(user,userFollowed)){
             deleteFollow(user,userFollowed);
+            notificationMapper.deleteNotification(user,userFollowed,NotificationEnum.FOLLOW_USER.getType(), -1);
         }else {
             addFollow(user,userFollowed);
             notificationMapper.insertNotification(user,userFollowed, NotificationEnum.FOLLOW_USER.getType(), 0,-1,System.currentTimeMillis());
