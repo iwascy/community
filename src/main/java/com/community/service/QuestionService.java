@@ -3,6 +3,7 @@ package com.community.service;
 import com.community.domain.Question;
 import com.community.domain.User;
 import com.community.dto.IndexQuestionDTO;
+import com.community.dto.QuestionProfileDTO;
 import com.community.mapper.QuestionMapper;
 import com.community.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,4 +76,5 @@ public class QuestionService {
     public int praiseCountById(int id){
         return questionMapper.findPraiseCount(id);
     };
+
 }

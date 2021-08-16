@@ -1,6 +1,8 @@
 package com.community.controller;
 
 import com.community.domain.Question;
+import com.community.domain.User;
+import com.community.dto.CommentDTO;
 import com.community.mapper.QuestionMapper;
 
 import com.community.service.CommentService;
@@ -9,9 +11,9 @@ import com.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class QuestionPageController {
@@ -46,5 +48,18 @@ public class QuestionPageController {
         return "redirect:/index";
     }
 
+    @PostMapping("/question/{id}/comment")
+    public String addComment(@RequestBody CommentDTO commentDTO,
+                             @PathVariable("id") int id){
+        commentService.addComment(commentDTO);
+        return "redirect:/question/"+id;
+    }
+
+    @PostMapping("/question/{id}/like")
+    public void like(@PathVariable("id") int id, HttpSession session){
+        User user = (User)session.getAttribute("user");
+
+        commentService.addLike(id);
+    }
 
 }

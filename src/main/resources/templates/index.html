@@ -12,6 +12,7 @@
     <script src="/js/community.js"></script>
 </head>
 <body>
+
 <input type="hidden" id="userId" th:value="${session.user == null ? null : session.user.id}">
 <div th:replace="common :: commonnvg"></div>
 <div class="setBottom layui-col-lg7 col-lg-offset-1">
@@ -64,8 +65,8 @@
                         </a>
                     </li>
                     <li><a href="/index">首页</a></li>
-                    <li th:each="page : ${pageInfo.getNavigatepageNums()}"><a th:href="@{'/index/page='+${page}}" th:text="${page}"></a></li>
-                    <li><a th:href="@{'/index/page='+${pageInfo.getNavigateLastPage()}}">尾页</a></li>
+                    <li th:each="page : ${pageInfo.getNavigatepageNums()}"><a th:href="@{'/index?pageNum='+${page}}" th:text="${page}"></a></li>
+                    <li><a th:href="@{'/index?pageNum='+${pageInfo.getNavigateLastPage()}}">尾页</a></li>
                     <li>
                         <a href="#" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
@@ -83,8 +84,8 @@
                         </a>
                     </li>
                     <li><a href="/popular">首页</a></li>
-                    <li th:each="page : ${pageInfo.getNavigatepageNums()}"><a th:href="@{'/popular/page='+${page}}" th:text="${page}"></a></li>
-                    <li><a th:href="@{'/popular/page='+${pageInfo.getNavigateLastPage()}}">尾页</a></li>
+                    <li th:each="page : ${pageInfo.getNavigatepageNums()}"><a th:href="@{'/popular?pageNum='+${page}}" th:text="${page}"></a></li>
+                    <li><a th:href="@{'/popular?pageNum='+${pageInfo.getNavigateLastPage()}}">尾页</a></li>
                     <li>
                         <a href="#" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
@@ -102,8 +103,8 @@
                         </a>
                     </li>
                     <li><a href="/follow">首页</a></li>
-                    <li th:each="page : ${pageInfo.getNavigatepageNums()}"><a th:href="@{'/follow/page='+${page}}" th:text="${page}"></a></li>
-                    <li><a th:href="@{'/follow/page='+${pageInfo.getNavigateLastPage()}}">尾页</a></li>
+                    <li th:each="page : ${pageInfo.getNavigatepageNums()}"><a th:href="@{'/follow?pageNum='+${page}}" th:text="${page}"></a></li>
+                    <li><a th:href="@{'/follow?pageNum='+${pageInfo.getNavigateLastPage()}}">尾页</a></li>
                     <li>
                         <a href="#" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>

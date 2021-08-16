@@ -2,14 +2,20 @@ package com.community;
 
 import com.community.domain.Question;
 import com.community.domain.User;
+import com.community.dto.QuestionProfileDTO;
 import com.community.mapper.QuestionMapper;
 import com.community.mapper.UserMapper;
 import com.community.service.CommentService;
+import com.community.service.QuestionService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 import javax.xml.crypto.Data;
 import java.text.SimpleDateFormat;
@@ -24,18 +30,19 @@ class CommunityApplicationTests {
     private QuestionMapper questionMapper;
 
     @Autowired
+    private QuestionService questionService;
+
+    @Autowired
     CommentService commentService;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @Test
     void findTime(){
-        int a = sumNums(3);
-        System.out.println(a);
+        String result = stringRedisTemplate.opsForValue().get("k1");
+
+        System.out.println(result);
     }
 
-    int res = 0;
-    public int sumNums(int n) {
-        boolean x = (n < 0) || (sumNums(n - 1) > 0);
-        res += n;
-        return res;
-    }
 }

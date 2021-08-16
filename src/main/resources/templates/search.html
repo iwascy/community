@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" style="background: #f6f6f6">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <script src="/js/bootstrap.js"></script>
+    <script src="/layui/layui.js" charset="utf-8"></script>
+    <script src="/js/jquery-3.6.0.js"></script>
+    <link rel="stylesheet" href="/css/community.css">
+    <script src="/js/community.js"></script>
+</head>
+<body>
+
+<input type="hidden" id="userId" th:value="${session.user == null ? null : session.user.id}">
+<div th:replace="common :: commonnvg"></div>
+<div class="setBottom layui-col-lg7 col-lg-offset-1">
+    <div>
+        <div class="layui-row" >
+            <div>
+                <div th:each="questionProfileDTO : ${pageInfo.getList()}" >
+                    <div class="layui-card">
+                        <div class="layui-card-body" >
+                            <div>
+                                <small style="color: #ffffff;font-weight: normal;font-size: 12px;padding: 0 3px;border-radius: 2px;background-color: #f68b83;display: inline-block;height: 18px;">问题</small>
+                                <a class="layui-font-black" style="font-size: 25px;font-weight: bold" th:href="@{'/question/'+${questionProfileDTO.getId()}}"  th:text="${questionProfileDTO.getTitle()}"></a>
+                            </div>
+                            <div class="content">
+                                <span style="font-weight: bold" th:text="${questionProfileDTO.getName()}+'：'" class="layui-font-black" ></span>
+                                <span th:text="${questionProfileDTO.getDetail()}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div>
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li>
+                        <a href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li th:each="page : ${pageInfo.getNavigatepageNums()}"><a th:href="@{'/search?detail='+${detail}+'&pageNum='+${page}}" th:text="${page}"></a></li>
+                    <li>
+                        <a href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+<div th:replace="common :: commonsrc"></div>
+</body>
+</html>

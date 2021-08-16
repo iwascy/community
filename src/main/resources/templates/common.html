@@ -30,8 +30,11 @@
                 </dl>
             </li>
             <li class="layui-nav-item"  lay-bar="disabled">
-                <input type="text" style="height: 27px;width: 300px;border-color: gainsboro;background-color: #3a3d48" placeholder="搜索">
-                <button class="layui-btn layui-btn-sm layui-btn-primary layui-border-blue" type="submit">搜索</button>
+                <form method="get" action="/search">
+                    <input type="text" name="detail" style="height: 27px;width: 300px;border-color: gainsboro;background-color: #3a3d48" placeholder="搜索">
+                    <button class="layui-btn layui-btn-sm layui-btn-primary layui-border-blue" type="submit">搜索</button>
+                </form>
+
             </li>
 
             <li class="layui-nav-item pull-right" th:if="${session.user == null}"><a href="https://github.com/login/oauth/authorize?client_id=f5d6c15d0297d8f0bd88&redirect_uri=http://localhost:8080/callback&scope=user&state=1" methods="get">登录</a></li>
@@ -40,11 +43,11 @@
                 <dl class="layui-nav-child topNa">
                     <dd><a href="/myquestion">发布的问题</a></dd>
                     <dd><a href="javascript:;">安全管理</a></dd>
-                    <dd><a href="javascript:;">退了</a></dd>
+                    <dd><a href="/logout">退了</a></dd>
                 </dl>
             </li>
             <li class="layui-nav-item pull-right" th:if="${session.user != null}">
-            <a th:href="'/people/'+${session.user.id}+'/notification'" onclick="readNotification()">通知<span class="layui-badge" th:text="${session.notificationCount}"></span></a>
+            <a th:href="'/people/'+${session.user.id}+'/notification'" onclick="readNotification()">通知<span th:if="${session.notificationCount}!=0" class="layui-badge" th:text="${session.notificationCount}"></span></a>
         </li>
         </ul>
     </div>

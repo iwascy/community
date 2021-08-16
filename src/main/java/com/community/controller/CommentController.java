@@ -20,17 +20,17 @@ public class CommentController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/question/{id}/comment")
-    public String addComment(@RequestBody CommentDTO commentDTO,
-                             @PathVariable("id") int id){
-        commentService.addComment(commentDTO);
-        return "redirect:/question/"+id;
-    }
-
-    @PostMapping("/question/{id}/like")
-    public void like(@PathVariable("id") int id, HttpSession session){
-        User user = (User)session.getAttribute("user");
-
-        commentService.addLike(id);
-    }
+//    @PostMapping("/question/{id}/comment")
+//    public String addComment(@RequestBody CommentDTO commentDTO,
+//                             @PathVariable("id") int id){
+//        commentService.addComment(commentDTO);
+//        return "redirect:/question/"+id;
+//    }
+//
+//    @PostMapping("/question/{id}/like")
+//    public void like(@PathVariable("id") int id, HttpSession session){
+//        User user = (User)session.getAttribute("user");
+//
+//        commentService.addLike(id);
+//    }
 }

@@ -31,12 +31,6 @@ import java.util.List;
 public class IndexController {
 
     @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
-    private QuestionMapper questionMapper;
-
-    @Autowired
     private QuestionService questionService;
 
     @Autowired
@@ -49,7 +43,8 @@ public class IndexController {
     private NotificationService notificationService;
 
     @GetMapping({"/","/index"})
-    public String toIndex(HttpServletRequest request, HttpServletResponse response,
+    public String toIndex(@RequestParam(value = "pageNum",defaultValue = "1") int pageNum,
+                          HttpServletRequest request, HttpServletResponse response,
                           HttpSession session, Model model){
 
         //登录
@@ -58,7 +53,7 @@ public class IndexController {
             request.getSession().setAttribute("user",user);
         }
         //分页
-        PageHelper.startPage(1,5);
+        PageHelper.startPage(pageNum,5);
         PageInfo pageInfo = new PageInfo(questionService.sortByLatestTime());
         model.addAttribute("userService",userService);
         model.addAttribute("pageInfo",pageInfo);
@@ -68,8 +63,9 @@ public class IndexController {
     }
 
     @GetMapping("/popular")
-    public String newQuestoin(Model model){
-        PageHelper.startPage(1,5);
+    public String newQuestoin(@RequestParam(value = "pageNum",defaultValue = "1") int pageNum,
+                              Model model){
+        PageHelper.startPage(pageNum,5);
         PageInfo pageInfo = new PageInfo(questionService.sortByPopular());
         model.addAttribute("userService",userService);
         model.addAttribute("pageInfo",pageInfo);
@@ -79,8 +75,9 @@ public class IndexController {
     }
 
     @GetMapping("/follow")
-    public String follow(HttpServletRequest request,Model model){
-        PageHelper.startPage(1,5);
+    public String follow(@RequestParam(value = "pageNum",defaultValue = "1") int pageNum,
+                         HttpServletRequest request,Model model){
+        PageHelper.startPage(pageNum,5);
         User user = (User) request.getSession().getAttribute("user");
         PageInfo pageInfo = new PageInfo(questionService.findQuestionByFollow(user.getId()));
         model.addAttribute("userService",userService);
@@ -89,4 +86,5 @@ public class IndexController {
         model.addAttribute("praiseService",praiseService);
         return "index";
     }
+
 }
