@@ -3,6 +3,7 @@ package com.community.controller;
 import com.community.domain.Question;
 import com.community.domain.User;
 import com.community.dto.CommentDTO;
+import com.community.dto.QuestionDTO;
 import com.community.mapper.QuestionMapper;
 
 import com.community.service.CommentService;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 
 @Controller
-public class QuestionPageController {
+public class QuestionController {
 
     @Autowired
     private QuestionMapper questionMapper;
@@ -35,10 +36,10 @@ public class QuestionPageController {
 
         Question question = questionMapper.findQuestionById(id);
         questionService.addView(id);
-        model.addAttribute("question",question);
-        model.addAttribute("userService",userService);
         model.addAttribute("comments",commentService.findQuestionComment(id));
         model.addAttribute("commentService",commentService);
+
+        model.addAttribute("questionDTO",questionService.showQuestion(id));
         return "question";
     }
 

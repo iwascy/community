@@ -31,11 +31,10 @@ function post(){
 /*
 *二级评论
  */
-function second(){
+function second(type){
     var questionId = $("#question_id").val();
-    var content = $("#second_content").val();
+    var content = $("#second_"+type).val();
     var accountId = $("#account_id").val();
-    var type = $("#comment_type").val();
     $.ajax({
         type:"POST",
         url:"/question/"+questionId+"/comment",
@@ -46,11 +45,12 @@ function second(){
             "content":content,
             "type":type
         }),
-        success:function (response){
-            console.log(response);
-        },
         dataType:"json"
     });
+    setTimeout(function (){
+
+        window.location.reload();
+    }, 200);
 }
 
 /*

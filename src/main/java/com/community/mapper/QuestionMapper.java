@@ -92,4 +92,9 @@ public interface QuestionMapper {
     @Select("SELECT * FROM question WHERE title REGEXP #{condition} or detail REGEXP #{condition} DESC")
     List<Question> search(String condition);
 
+    @Select("select creator from question where id = #{id}")
+    int findCreatorByQuestionId(int id);
+
+    @Select("select update_time from question where id = #{id}")
+    long findTimeByQuestionId(int id);
 }
