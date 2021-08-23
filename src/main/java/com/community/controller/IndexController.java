@@ -2,8 +2,10 @@ package com.community.controller;
 
 
 import com.community.domain.Notification;
+import com.community.domain.Praise;
 import com.community.domain.Question;
 import com.community.domain.User;
+import com.community.dto.PraiseUserDTO;
 import com.community.mapper.QuestionMapper;
 import com.community.mapper.UserMapper;
 import com.community.service.NotificationService;
@@ -17,15 +19,15 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class IndexController {
@@ -66,7 +68,7 @@ public class IndexController {
     public String newQuestoin(@RequestParam(value = "pageNum",defaultValue = "1") int pageNum,
                               Model model){
         PageHelper.startPage(pageNum,5);
-        PageInfo pageInfo = new PageInfo(questionService.sortByPopular());
+        PageInfo pageInfo = new PageInfo(questionService.sortByPopular(),8);
         model.addAttribute("userService",userService);
         model.addAttribute("pageInfo",pageInfo);
         model.addAttribute("info","popular");
@@ -85,6 +87,37 @@ public class IndexController {
         model.addAttribute("info","follow");
         model.addAttribute("praiseService",praiseService);
         return "index";
+    }
+
+    @ResponseBody
+    @RequestMapping("/praise")
+    public Map<String, Object> addPraise(@RequestBody PraiseUserDTO praiseUserDTO,
+                                         Model model){
+        Praise praise = new Praise();
+        int userId = praiseUserDTO.getUser();
+        int questionId = praiseUserDTO.getQuestion();
+        praise.setUser(userId);
+        praise.setQuestion(questionId);
+        praise.setCreateTime(System.currentTimeMillis());
+        praise.setUpdateTime(System.currentTimeMillis());
+        if(praiseService.addPraise(praise)){
+            questionService.addPraiseCount(questionId);
+        }else{
+            questionService.reducePraiseCount(questionId);
+        }
+        model.addAttribute("alreadyPraise",praiseService.alreadyPraise(praise.getUser(), praise.getQuestion()));
+        Map<String,Object> result = new HashMap<>();
+        int count = questionService.praiseCountById(questionId);
+        result.put("count",count);
+        return result;
+    }
+
+    @ResponseBody
+    @PostMapping("/praiseStatus")
+    public String praiseStatus(@RequestBody PraiseUserDTO praiseUserDTO,
+                               Model model){
+        model.addAttribute("status",praiseService.alreadyPraise(praiseUserDTO.getUser(), praiseUserDTO.getQuestion()));
+        return null;
     }
 
 }
