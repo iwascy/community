@@ -1,4 +1,4 @@
-##脚本
+##测试
 ```sql
 create table user
 (
