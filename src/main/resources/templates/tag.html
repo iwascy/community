@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="${tagString}+' - 微社区'"></title>
     <link rel="stylesheet" href="/layui/css/layui.css">
     <link rel="stylesheet" href="/css/bootstrap.css">
     <script src="/js/bootstrap.js"></script>
@@ -11,8 +11,46 @@
 
 <body>
 <div th:replace="common :: commonnvg"></div>
-<div th:replace="common :: common-question"></div>
+<div style="padding: 30px;">
+    <div id="page">
+        <div class="layui-row layui-col-space1" >
+            <div class="layui-col-md6" th:each="question : ${pageInfo.getList()}" >
+                <div class="layui-card">
+                    <div class="layui-card-body" >
+                        <h3>
+                            <a class="layui-font-black" style="font-size: 30px" th:href="@{'/question/'+${question.id}}"  th:text="${question.title}"></a>
+                        </h3>
+                        <p th:text="${question.name}+'：'+${question.detail}" class="layui-font-black" ></p>
+                        <p class="layui-font-gray">
+                            <i class="layui-icon layui-icon-praise" th:text="${question.praiseCount}"></i>
+                            <i class="layui-icon layui-icon-reply-fill" th:text="${question.commentCount}+'条评论'"></i>
+                            <i class="layui-icon layui-icon-user" th:text="${question.viewCount}+'浏览'"></i> </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div>
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <li>
+                <a href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li><a th:href="@{'/tag/'+${tag}}">首页</a></li>
+            <li th:each="page : ${pageInfo.getNavigatepageNums()}"><a th:href="@{'/tag/'+${tag}+'?pageNum='+${page}}" th:text="${page}"></a></li>
+            <li><a th:href="@{'/tag/'+${tag}+'?pageNum='+${pageInfo.getNavigateLastPage()}}">尾页</a></li>
+            <li>
+                <a href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
 <div th:replace="common :: commonsrc"></div>
 </body>
 </html>

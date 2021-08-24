@@ -68,7 +68,7 @@ public class IndexController {
     public String newQuestoin(@RequestParam(value = "pageNum",defaultValue = "1") int pageNum,
                               Model model){
         PageHelper.startPage(pageNum,5);
-        PageInfo pageInfo = new PageInfo(questionService.sortByPopular(),8);
+        PageInfo pageInfo = new PageInfo(questionService.sortByPopular());
         model.addAttribute("userService",userService);
         model.addAttribute("pageInfo",pageInfo);
         model.addAttribute("info","popular");
