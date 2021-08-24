@@ -5,7 +5,6 @@ import com.community.domain.Question;
 import com.community.domain.User;
 import com.community.dto.IndexQuestionDTO;
 import com.community.dto.QuestionDTO;
-import com.community.dto.QuestionProfileDTO;
 import com.community.dto.ShowCommentDTO;
 import com.community.mapper.QuestionMapper;
 import com.community.mapper.UserMapper;

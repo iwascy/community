@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${tagString}+' - 微社区'"></title>
+    <title th:text="${tagString} +' - 微社区'"></title>
     <link rel="stylesheet" href="/layui/css/layui.css">
     <link rel="stylesheet" href="/css/bootstrap.css">
     <script src="/js/bootstrap.js"></script>
@@ -14,12 +14,12 @@
 <div style="padding: 30px;">
     <div id="page">
         <div class="layui-row layui-col-space1" >
-            <div class="layui-col-md6" th:each="question : ${pageInfo.getList()}" >
+            <div class="layui-col-md6" th:each="question : ${pageInfo.list}" >
                 <div class="layui-card">
                     <div class="layui-card-body" >
-                        <h3>
-                            <a class="layui-font-black" style="font-size: 30px" th:href="@{'/question/'+${question.id}}"  th:text="${question.title}"></a>
-                        </h3>
+                        <div>
+                            <a class="layui-font-black" style="font-size: 30px" th:href="@{'/question/'+${question.getId()}}"  th:text="${question.title}"></a>
+                        </div>
                         <p th:text="${question.name}+'：'+${question.detail}" class="layui-font-black" ></p>
                         <p class="layui-font-gray">
                             <i class="layui-icon layui-icon-praise" th:text="${question.praiseCount}"></i>
