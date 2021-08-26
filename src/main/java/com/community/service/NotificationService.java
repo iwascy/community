@@ -7,15 +7,20 @@ import com.community.mapper.NotificationMapper;
 import com.community.mapper.QuestionMapper;
 import com.community.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class NotificationService {
     @Autowired
     private NotificationMapper notificationMapper;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Autowired
     private QuestionMapper questionMapper;
@@ -24,7 +29,16 @@ public class NotificationService {
     private UserMapper userMapper;
 
     public void addNotification(int notifier,int userNotified,int type,int outerId){
+        String uuid = "notification:user:"+userNotified;
+        boolean hasKey = redisTemplate.hasKey(uuid);
+        int count = 0;
         notificationMapper.insertNotification(notifier,userNotified,type,0,outerId,System.currentTimeMillis());
+        if(hasKey){
+            redisTemplate.opsForValue().increment(uuid,1);
+        }else{
+            count = notificationMapper.findNotificationCount(userNotified);
+            redisTemplate.opsForValue().set(uuid,count,2l, TimeUnit.HOURS);
+        }
     }
 
     public List<NotificationDTO> notificationContent(int user){
@@ -56,10 +70,21 @@ public class NotificationService {
     }
 
     public int notificationCount(int user){
-        return notificationMapper.findNotificationCount(user);
+        String uuid = "notification:user:"+user;
+        boolean hasKey = redisTemplate.hasKey(uuid);
+        int count = 0;
+        if(hasKey){
+            count = (int)redisTemplate.opsForValue().get(uuid);
+        }else{
+            count = notificationMapper.findNotificationCount(user);
+            redisTemplate.opsForValue().set(uuid,count,2l, TimeUnit.HOURS);
+        }
+        return count;
     }
 
     public void readNotification(int user){
+        String uuid = "notification:user:"+user;
+        redisTemplate.opsForValue().set(uuid,0);
         notificationMapper.setNotificationStatusTrue(user);
     }
 }

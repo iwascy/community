@@ -1,5 +1,6 @@
 package com.community.service;
 
+import com.community.CommunityApplication;
 import com.community.domain.Comment;
 import com.community.domain.Question;
 import com.community.domain.User;
@@ -8,7 +9,10 @@ import com.community.dto.QuestionDTO;
 import com.community.dto.ShowCommentDTO;
 import com.community.mapper.QuestionMapper;
 import com.community.mapper.UserMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,6 +20,7 @@ import java.util.List;
 
 @Service
 public class QuestionService {
+    protected static final Logger logger = LoggerFactory.getLogger(CommunityApplication.class);
 
     @Autowired
     private UserMapper userMapper;
@@ -25,6 +30,32 @@ public class QuestionService {
 
     @Autowired
     private CommentService commentService;
+
+
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+
+    public int addQuestionViewCount(int questionId){
+        String key = "question:" + questionId;
+        String viewCountString = "viewCount";
+        boolean hasKey = redisTemplate.hasKey(key);
+        int viewCount = 0;
+        if(hasKey && redisTemplate.opsForHash().hasKey(key,viewCountString)){
+            redisTemplate.opsForHash().increment(key,viewCountString,1);
+            viewCount = (int) redisTemplate.opsForHash().get(key,viewCountString);
+        }else{
+            int count = 0;
+            try{
+                count = questionMapper.findViewCount(questionId);
+            }catch (Exception e){
+                logger.info("找不到问题，"+e);
+            }
+            redisTemplate.opsForHash().put(key,viewCountString,count+1);
+            viewCount = count;
+        }
+        return viewCount;
+    }
 
 
     public void PublishQuestion(User user,String title,String detail,String tag){
@@ -124,6 +155,7 @@ public class QuestionService {
         questionDTO.setSecondShowCommentDTOList(secondShowCommentDTOList);
         return questionDTO;
     }
+
 
 
 

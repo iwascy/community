@@ -6,6 +6,7 @@ import com.community.dto.QuestionProfileDTO;
 import com.community.mapper.QuestionMapper;
 import com.community.mapper.UserMapper;
 import com.community.service.CommentService;
+import com.community.service.IndexService;
 import com.community.service.QuestionService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -38,11 +39,17 @@ class CommunityApplicationTests {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
-    @Test
-    void findTime(){
-        String result = stringRedisTemplate.opsForValue().get("k1");
+    @Autowired
+    private RedisTemplate redisTemplate;
 
-        System.out.println(result);
+    @Autowired
+    private IndexService indexService;
+
+    @Test
+    void redisTest(){
+        int count = questionService.addQuestionViewCount(5);
+        System.out.println(count);
+
     }
 
 }
