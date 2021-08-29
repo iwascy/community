@@ -8,6 +8,7 @@ import com.community.mapper.UserMapper;
 import com.community.service.CommentService;
 import com.community.service.IndexService;
 import com.community.service.QuestionService;
+import com.community.service.SearchService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.junit.jupiter.api.Test;
@@ -43,13 +44,13 @@ class CommunityApplicationTests {
     private RedisTemplate redisTemplate;
 
     @Autowired
+    private SearchService searchService;
+
+    @Autowired
     private IndexService indexService;
 
     @Test
     void redisTest(){
-        int count = questionService.addQuestionViewCount(5);
-        System.out.println(count);
-
     }
 
 }

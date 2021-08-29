@@ -1,6 +1,7 @@
 package com.community.mapper;
 
 import com.community.domain.Question;
+import com.community.dto.QuestionProfileDTO;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -89,7 +90,7 @@ public interface QuestionMapper {
     @Select("select creator from question where id = #{questionId}")
     int findCreatorByQuestion(int questionId);
 
-    @Select("SELECT * FROM question WHERE 1=1 and title REGEXP #{condition} or detail REGEXP #{condition} order by update_time DESC")
+    @Select("SELECT * FROM question WHERE 1=1 and (title REGEXP #{condition} or detail REGEXP #{condition}) order by update_time DESC")
     List<Question> search(String condition);
 
     @Select("SELECT count(*) FROM question WHERE 1=1 and title REGEXP #{condition} or detail REGEXP #{condition}")
