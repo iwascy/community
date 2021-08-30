@@ -40,8 +40,6 @@
             <li th:if="${session.user} != null" class="layui-nav-item pull-right" >
                 <a th:href="'/people/'+${session.user.id}"><img class="layui-nav-img" th:text="${session.user.getName()}"></a>
                 <dl class="layui-nav-child topNa">
-                    <dd><a href="/myquestion">发布的问题</a></dd>
-                    <dd><a href="javascript:;">安全管理</a></dd>
                     <dd><a href="/logout">退了</a></dd>
                 </dl>
             </li>

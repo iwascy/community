@@ -12,38 +12,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class SearchService {
+public class QuestionConvert{
 
     @Autowired
     private QuestionMapper questionMapper;
-
     @Autowired
     private UserService userService;
 
-    public PageInfo search(int pageNum,String detail) {
-        String condition = detail.replace(" ","|");
-        PageHelper.startPage(pageNum,5);
-        List<Question> questionList = questionMapper.search(condition);
-        PageInfo page = new PageInfo(questionList);
+    public PageInfo getPageInfo(List<Question> questionList, int pageNum){
         List<QuestionProfileDTO> questionProfileDTOList = new ArrayList<>();
-        for (Question question : (List<Question>) page.getList()) {
+        PageInfo pageInfo = new PageInfo(questionList);
+        for (Question question : questionList) {
             QuestionProfileDTO questionProfileDTO = new QuestionProfileDTO();
             questionProfileDTO.setId(question.getId());
             questionProfileDTO.setName(userService.findUserNameById(question.getCreator()));
             questionProfileDTO.setCommentCount(question.getCommentCount());
-            questionProfileDTO.setPraiseCount(questionProfileDTO.getPraiseCount());
+            questionProfileDTO.setPraiseCount(question.getPraiseCount());
             questionProfileDTO.setTitle(question.getTitle());
             int len = question.getDetail().length();
-            if(len > 100){
-                questionProfileDTO.setDetail(question.getDetail().substring(1,100)+"......");
-            }else {
+            if (len > 100) {
+                questionProfileDTO.setDetail(question.getDetail().substring(1, 100) + "......");
+            } else {
                 questionProfileDTO.setDetail(question.getDetail());
             }
 
             questionProfileDTO.setTag(questionProfileDTO.getTag());
             questionProfileDTOList.add(questionProfileDTO);
         }
-        page.setList(questionProfileDTOList);
-        return page;
+        pageInfo.setList(questionProfileDTOList);
+        return pageInfo;
+
     }
 }

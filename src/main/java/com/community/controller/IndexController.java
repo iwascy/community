@@ -8,10 +8,7 @@ import com.community.domain.User;
 import com.community.dto.PraiseUserDTO;
 import com.community.mapper.QuestionMapper;
 import com.community.mapper.UserMapper;
-import com.community.service.NotificationService;
-import com.community.service.PraiseService;
-import com.community.service.QuestionService;
-import com.community.service.UserService;
+import com.community.service.*;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -44,6 +41,9 @@ public class IndexController {
     @Autowired
     private NotificationService notificationService;
 
+    @Autowired
+    private IndexService indexService;
+
     @GetMapping({"/","/index"})
     public String toIndex(@RequestParam(value = "pageNum",defaultValue = "1") int pageNum,
                           HttpServletRequest request, HttpServletResponse response,
@@ -55,8 +55,8 @@ public class IndexController {
             request.getSession().setAttribute("user",user);
         }
         //分页
-        PageHelper.startPage(pageNum,5);
-        PageInfo pageInfo = new PageInfo(questionService.sortByLatestTime());
+
+        PageInfo pageInfo = indexService.sortByLatestTime(pageNum);
         model.addAttribute("userService",userService);
         model.addAttribute("pageInfo",pageInfo);
         model.addAttribute("info","latest");
@@ -67,8 +67,7 @@ public class IndexController {
     @GetMapping("/popular")
     public String newQuestoin(@RequestParam(value = "pageNum",defaultValue = "1") int pageNum,
                               Model model){
-        PageHelper.startPage(pageNum,5);
-        PageInfo pageInfo = new PageInfo(questionService.sortByPopular());
+        PageInfo pageInfo = indexService.sortByPopular(pageNum);
         model.addAttribute("userService",userService);
         model.addAttribute("pageInfo",pageInfo);
         model.addAttribute("info","popular");
@@ -79,9 +78,9 @@ public class IndexController {
     @GetMapping("/follow")
     public String follow(@RequestParam(value = "pageNum",defaultValue = "1") int pageNum,
                          HttpServletRequest request,Model model){
-        PageHelper.startPage(pageNum,5);
+
         User user = (User) request.getSession().getAttribute("user");
-        PageInfo pageInfo = new PageInfo(questionService.findQuestionByFollow(user.getId()));
+        PageInfo pageInfo = indexService.follow(pageNum,user.getId());
         model.addAttribute("userService",userService);
         model.addAttribute("pageInfo",pageInfo);
         model.addAttribute("info","follow");
@@ -100,7 +99,7 @@ public class IndexController {
         praise.setQuestion(questionId);
         praise.setCreateTime(System.currentTimeMillis());
         praise.setUpdateTime(System.currentTimeMillis());
-        if(praiseService.addPraise(praise)){
+        if(praiseService.addPraise(praiseUserDTO)){
             questionService.addPraiseCount(questionId);
         }else{
             questionService.reducePraiseCount(questionId);

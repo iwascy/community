@@ -31,25 +31,25 @@
                         <div class="layui-card-body" >
                             <div>
                                 <small style="color: #ffffff;font-weight: normal;font-size: 12px;padding: 0 3px;border-radius: 2px;background-color: #f68b83;display: inline-block;height: 18px;">问题</small>
-                                <a class="layui-font-black" style="font-size: 25px;font-weight: bold" th:href="@{'/question/'+${question.getId()}}"  th:text="${question.getTitle()}"></a>
+                                <a class="layui-font-black" style="font-size: 25px;font-weight: bold" th:href="@{'/question/'+${question.id}}"  th:text="${question.title}"></a>
                             </div>
                             <div class="content">
-                                <span style="font-weight: bold" th:text="${userService.findUserNameById(question.getCreator())}+'：'" class="layui-font-black" ></span>
-                                <span th:text="${question.getDetail()}"></span>
+                                <span style="font-weight: bold" th:text="${question.name}+'：'" class="layui-font-black" ></span>
+                                <span th:text="${question.detail}"></span>
                             </div>
                             <p class="layui-font-gray">
                                 <span th:if="${session.user == null}">
-                                    <button class="point point1" th:href="@{login.html}" th:text="'赞同 '+${question.getPraiseCount()}" th:question-id="${question.id}" th:id="${'question-'+question.id}">
-                                        <span th:value="${question.getPraiseCount()}"></span>
+                                    <button class="point point1" th:href="@{login.html}" th:text="'赞同 '+${question.praiseCount}" th:question-id="${question.id}" th:id="${'question-'+question.id}">
+                                        <span th:value="${question.praiseCount}"></span>
                                     </button>
                                 </span>
 
                                 <span th:if="${session.user != null}">
-                                    <button class="point point1" th:classappend="${praiseService.alreadyPraise(session.user.id,question.getId())} == true ? 'like' : ''" onclick="addPraise(this)" th:text="'赞同 '+${question.getPraiseCount()}" th:question-id="${question.id}" th:id="${'question-'+question.id}"></button>
+                                    <button class="point point1" th:classappend="${praiseService.alreadyPraise(session.user.id,question.id)} == true ? 'like' : ''" onclick="addPraise(this)" th:text="'赞同 '+${question.praiseCount}" th:question-id="${question.id}" th:id="${'question-'+question.id}"></button>
                                 </span>
 
-                                <i class="layui-icon layui-icon-reply-fill" style="font-size: 8px" th:text="${question.getCommentCount()}+'条评论'"></i>
-                                <i class="layui-icon layui-icon-user" style="font-size: 8px" th:text="${question.getViewCount()}+'浏览'"></i> </p>
+                                <i class="layui-icon layui-icon-reply-fill" style="font-size: 8px" th:text="${question.commentCount}+'条评论'"></i>
+                                <i class="layui-icon layui-icon-user" style="font-size: 8px" th:text="${question.viewCount}+'浏览'"></i> </p>
                         </div>
                     </div>
                 </div>

@@ -6,9 +6,12 @@ import com.community.domain.Question;
 import com.community.domain.User;
 import com.community.dto.IndexQuestionDTO;
 import com.community.dto.QuestionDTO;
+import com.community.dto.QuestionProfileDTO;
 import com.community.dto.ShowCommentDTO;
 import com.community.mapper.QuestionMapper;
 import com.community.mapper.UserMapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +37,9 @@ public class QuestionService {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private UserService userService;
 
 
     public int addQuestionViewCount(int questionId){
@@ -80,8 +86,30 @@ public class QuestionService {
         questionMapper.addViewCount(id);
     }
 
-    public List<Question> sortByLatestTime(){
-        return questionMapper.sortByLatestTime();
+    public PageInfo sortByLatestTime(){
+        PageHelper.startPage(1,5);
+        List<Question> questionList = questionMapper.sortByLatestTime();
+        List<QuestionProfileDTO> questionProfileDTOList = new ArrayList<>();
+        PageInfo pageInfo = new PageInfo(questionList);
+        for (Question question : (List<Question>) pageInfo.getList()) {
+            QuestionProfileDTO questionProfileDTO = new QuestionProfileDTO();
+            questionProfileDTO.setId(question.getId());
+            questionProfileDTO.setName(userService.findUserNameById(question.getCreator()));
+            questionProfileDTO.setCommentCount(question.getCommentCount());
+            questionProfileDTO.setPraiseCount(questionProfileDTO.getPraiseCount());
+            questionProfileDTO.setTitle(question.getTitle());
+            int len = question.getDetail().length();
+            if(len > 100){
+                questionProfileDTO.setDetail(question.getDetail().substring(1,100)+"......");
+            }else {
+                questionProfileDTO.setDetail(question.getDetail());
+            }
+
+            questionProfileDTO.setTag(questionProfileDTO.getTag());
+            questionProfileDTOList.add(questionProfileDTO);
+        }
+        pageInfo.setList(questionProfileDTOList);
+        return pageInfo;
     }
 
     public List<Question> sortByPopular(){

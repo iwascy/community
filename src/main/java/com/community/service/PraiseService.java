@@ -1,7 +1,9 @@
 package com.community.service;
 
 import com.community.domain.Praise;
+import com.community.domain.Question;
 import com.community.dto.NotificationDTO;
+import com.community.dto.PraiseUserDTO;
 import com.community.enums.NotificationEnum;
 import com.community.mapper.NotificationMapper;
 import com.community.mapper.PraiseMapper;
@@ -24,15 +26,23 @@ public class PraiseService {
     @Autowired
     private UserMapper userMapper;
 
-    public boolean addPraise(Praise praise){
-        int userNotified = questionMapper.findCreatorByQuestion(praise.getQuestion());
-        if(alreadyPraise(praise.getUser(),praise.getQuestion())){
-            praiseMapper.deletePraiseByUserAndQuestion(praise.getUser(),praise.getQuestion());
-            notificationMapper.deleteNotification(praise.getId(),userNotified,NotificationEnum.PRAISE_QUESTION.getType(), praise.getQuestion());
+    @Autowired
+    private NotificationService notificationService;
+
+    public boolean addPraise(PraiseUserDTO praiseUserDTO){
+        int questionId = praiseUserDTO.getQuestion();
+        int userId = praiseUserDTO.getUser();
+        long createTime = System.currentTimeMillis();
+        long updateTime = System.currentTimeMillis();
+        int userNotified = questionMapper.findCreatorByQuestion(questionId);
+        if(alreadyPraise(userId,questionId)){
+            praiseMapper.deletePraiseByUserAndQuestion(userId,questionId);
+            notificationMapper.deleteNotification(userId,userNotified,NotificationEnum.PRAISE_QUESTION.getType(), questionId);
             return false;
         }else{
-            praiseMapper.addPraise(praise.getUser(), praise.getQuestion(), praise.getCreateTime(), praise.getUpdateTime());
-            notificationMapper.insertNotification(praise.getId(),userNotified,NotificationEnum.PRAISE_QUESTION.getType(),0, praise.getQuestion(), System.currentTimeMillis());
+            praiseMapper.addPraise(userId, questionId, createTime, updateTime);
+            notificationService.addNotification(userId,userNotified,NotificationEnum.PRAISE_QUESTION.getType(),questionId);
+            notificationMapper.insertNotification(userId,userNotified,NotificationEnum.PRAISE_QUESTION.getType(),0, questionId, System.currentTimeMillis());
             return true;
         }
     }
