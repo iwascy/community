@@ -33,7 +33,7 @@
                     <input type="hidden" name="questionId" th:value="${questionDTO.questionId}">
                     <hr class="layui-border-gray">
                     <!--问题内容-->
-                    <div style="height: 300px" id="question-content">
+                    <div id="question-content">
                         <!--<p th:text="${question.getDetail()}"></p>-->
                         <!--<div style="color: darkgray" th:text="'编辑于：'+${#dates.format(question.getUpdateTime(),'yyyy-MM-dd HH:mm')}"></div>-->
                         <textarea style="display:none;" th:text="${questionDTO.detail}"></textarea>

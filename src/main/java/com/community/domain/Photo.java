@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class Photo {
-    private int id;
-    private int questionId;
+    private Integer id;
+    private Integer questionId;
     private String photoUrl;
     private String key;
 }

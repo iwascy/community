@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class Praise {
-    private int id;
-    private int user;
-    private int question;
-    private long createTime;
-    private long updateTime;
+    private Integer id;
+    private Integer user;
+    private Integer question;
+    private Long createTime;
+    private Long updateTime;
 }

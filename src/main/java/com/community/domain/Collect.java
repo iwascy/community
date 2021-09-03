@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class Collect {
 
-    private int id;
-    private int accountId;
-    private int questionId;
+    private Integer id;
+    private Integer accountId;
+    private Integer questionId;
 }

@@ -4,11 +4,11 @@ import lombok.Data;
 
 @Data
 public class Notification {
-    private int id;
-    private int notifier;
-    private int userNotified;
-    private int type;
-    private int status;
-    private int outerId;
-    private long createTime;
+    private Integer id;
+    private Integer notifier;
+    private Integer userNotified;
+    private Integer type;
+    private Integer status;
+    private Integer outerId;
+    private Long createTime;
 }

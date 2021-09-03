@@ -15,6 +15,6 @@ public class User {
     private Integer accountId;
     private String token;
     private String avatar;
-    private long createTime;
-    private long updateTime;
+    private Long createTime;
+    private Long updateTime;
 }

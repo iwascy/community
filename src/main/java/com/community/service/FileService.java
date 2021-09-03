@@ -67,6 +67,7 @@ public class FileService {
         String url = cosClient.getObjectUrl(bucketName,fileName).toString();
         photoMapper.insertPhoto(questionId,url,fileName);
         cosClient.shutdown();
+        url = url + "?imageMogr2/thumbnail/800x";
         return url;
     }
 
