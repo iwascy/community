@@ -8,12 +8,12 @@ import java.util.List;
 public class QuestionDTO {
     private String title;
     private String author;
-    private long time;
+    private Long time;
     private String detail;
-    private int questionId;
+    private Integer questionId;
     private String avatar;
-    private int creatorId;
-    private int commentCount;
+    private Integer creatorId;
+    private Integer commentCount;
     private List<ShowCommentDTO> firstShowCommentDTOList;
     private List<ShowCommentDTO> secondShowCommentDTOList;
 }

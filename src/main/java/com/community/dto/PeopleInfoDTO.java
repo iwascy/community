@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class PeopleInfoDTO {
-    private int user;
+    private Integer user;
     private String avatar;
-    boolean followStatus;
+    private Boolean followStatus;
 }

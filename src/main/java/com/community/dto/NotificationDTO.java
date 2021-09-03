@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class NotificationDTO {
     private String title;
-    private long time;
+    private Long time;
     private String notifierName;
     private String type;
-    private int notifier;
-    private int questionId;
+    private Integer notifier;
+    private Integer questionId;
 }

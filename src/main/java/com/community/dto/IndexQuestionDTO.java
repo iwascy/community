@@ -10,5 +10,5 @@ public class IndexQuestionDTO {
     private String author;
     private String title;
     private String detail;
-    private int viewCount;
+    private Integer viewCount;
 }

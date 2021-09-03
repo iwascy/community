@@ -4,12 +4,12 @@ import lombok.Data;
 
 @Data
 public class QuestionProfileDTO {
-    private int id;
+    private Integer id;
     private String name;
     private String title;
     private String detail;
-    private int commentCount;
-    private int viewCount;
-    private int praiseCount;
+    private Integer commentCount;
+    private Integer viewCount;
+    private Integer praiseCount;
     private String tag;
 }

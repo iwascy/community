@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class PraiseUserDTO {
-    private int user;
-    private int question;
+    private Integer user;
+    private Integer question;
 }
