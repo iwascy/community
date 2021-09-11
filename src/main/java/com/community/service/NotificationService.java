@@ -34,7 +34,9 @@ public class NotificationService {
         int count = 0;
         notificationMapper.insertNotification(notifier,userNotified,type,0,outerId,System.currentTimeMillis());
         if(hasKey){
-            redisTemplate.opsForValue().increment(uuid,1);
+            redisTemplate.delete(uuid);
+            count = notificationMapper.findNotificationCount(userNotified);
+            redisTemplate.opsForValue().set(uuid,count,2l, TimeUnit.HOURS);
         }else{
             count = notificationMapper.findNotificationCount(userNotified);
             redisTemplate.opsForValue().set(uuid,count,2l, TimeUnit.HOURS);
