@@ -42,7 +42,7 @@ public class PraiseService {
         }else{
             praiseMapper.addPraise(userId, questionId, createTime, updateTime);
             notificationService.addNotification(userId,userNotified,NotificationEnum.PRAISE_QUESTION.getType(),questionId);
-            notificationMapper.insertNotification(userId,userNotified,NotificationEnum.PRAISE_QUESTION.getType(),0, questionId, System.currentTimeMillis());
+            //notificationMapper.insertNotification(userId,userNotified,NotificationEnum.PRAISE_QUESTION.getType(),0, questionId, System.currentTimeMillis());
             return true;
         }
     }

@@ -6,6 +6,7 @@ import com.community.dto.AccessTokenDTO;
 import com.community.dto.GithubUserDTO;
 import com.community.mapper.UserMapper;
 import com.community.provider.GihubProvider;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -59,13 +60,14 @@ public class LoginByGithubController {
                 //唯一用户标识
                 String token = UUID.randomUUID().toString();
                 //判断用户表是否有该用户
+                System.out.println(githubUserDTO.getId());
                 if(userMapper.getAccountIdCount(githubUserDTO.getId()) > 0){
                     //修改token
                     userMapper.updateTokenByAccountId(token, githubUserDTO.getId());
                 }else{
                     //增加用户
                     if(githubUserDTO.getName()==null){
-                        githubUserDTO.setName("community_"+ (10000+userMapper.findUserCount()));
+                        githubUserDTO.setName(githubUserDTO.getLogin());
                     }
                     user.setName(githubUserDTO.getName());
                     user.setToken(token);

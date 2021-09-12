@@ -14,6 +14,7 @@ public class QuestionDTO {
     private String avatar;
     private Integer creatorId;
     private Integer commentCount;
+    private Integer viewCount;
     private List<ShowCommentDTO> firstShowCommentDTOList;
     private List<ShowCommentDTO> secondShowCommentDTOList;
 }

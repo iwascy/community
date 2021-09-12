@@ -28,7 +28,9 @@ public class QuestionConvert{
             questionProfileDTO.setName(userService.findUserNameById(question.getCreator()));
             questionProfileDTO.setCommentCount(question.getCommentCount());
             questionProfileDTO.setPraiseCount(question.getPraiseCount());
+            questionProfileDTO.setViewCount(question.getViewCount());
             questionProfileDTO.setTitle(question.getTitle());
+
             int len = question.getDetail().length();
             if (len > 100) {
                 questionProfileDTO.setDetail(question.getDetail().substring(1, 100) + "......");

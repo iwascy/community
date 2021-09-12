@@ -145,6 +145,7 @@ public class QuestionService {
         QuestionDTO questionDTO = new QuestionDTO();
         questionDTO.setQuestionId(id);
         int creatorId = questionMapper.findCreatorByQuestionId(id);
+        questionDTO.setViewCount(addQuestionViewCount(id));
         questionDTO.setAuthor(userMapper.findUserNameById(creatorId));
         questionDTO.setTitle(questionMapper.findTitleById(id));
         questionDTO.setDetail(questionMapper.findDetail(id));
