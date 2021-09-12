@@ -40,4 +40,7 @@ public interface UserMapper {
 
     @Select("select avatar from user where id =#{id}")
     String findAvatarById(int id);
+
+    @Select("select count(*) from user")
+    int findUserCount();
 }

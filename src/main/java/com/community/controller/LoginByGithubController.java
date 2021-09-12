@@ -64,6 +64,9 @@ public class LoginByGithubController {
                     userMapper.updateTokenByAccountId(token, githubUserDTO.getId());
                 }else{
                     //增加用户
+                    if(githubUserDTO.getName()==null){
+                        githubUserDTO.setName("community_"+ (10000+userMapper.findUserCount()));
+                    }
                     user.setName(githubUserDTO.getName());
                     user.setToken(token);
                     user.setAccountId(githubUserDTO.getId());
