@@ -99,12 +99,8 @@ public class IndexController {
         praise.setQuestion(questionId);
         praise.setCreateTime(System.currentTimeMillis());
         praise.setUpdateTime(System.currentTimeMillis());
-        if(praiseService.addPraise(praiseUserDTO)){
-            questionService.addPraiseCount(questionId);
-        }else{
-            questionService.reducePraiseCount(questionId);
-        }
-        model.addAttribute("alreadyPraise",praiseService.alreadyPraise(praise.getUser(), praise.getQuestion()));
+        praiseService.addLikeByRedis(praiseUserDTO);
+        model.addAttribute("alreadyPraise",praiseService.alreadyPraiseInRedis(praise.getUser(), praise.getQuestion()));
         Map<String,Object> result = new HashMap<>();
         int count = questionService.praiseCountById(questionId);
         result.put("count",count);

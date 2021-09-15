@@ -1,6 +1,8 @@
 package com.community.config;
+import com.community.job.SyncNotification;
 import com.community.job.SyncPopularQuestion;
 import com.community.job.SyncPopularQuestion;
+import com.community.job.SyncPraise;
 import com.community.service.QuestionService;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,36 @@ public class QuartzConfig
         return jobDetail;
     }
 
+    /**
+     * 定时任务1：
+     * 将数据库中热榜同步到redis（任务详情）
+     */
+    @Bean
+    public JobDetail syncPraiseJobDetail()
+    {
+        JobDetail jobDetail = JobBuilder.newJob(SyncPraise.class)
+                .withIdentity("syncPopularQuestionJobDetail",JOB_GROUP_NAME)
+                .usingJobData("detail", "将点赞信息存入redis") //设置参数（键值对）
+                .storeDurably() //即使没有Trigger关联时，也不需要删除该JobDetail
+                .build();
+        return jobDetail;
+    }
+
+    /**
+     * 定时任务1：
+     * 将数据库中热榜同步到redis（任务详情）
+     */
+    @Bean
+    public JobDetail syncNotificationJobDetail()
+    {
+        JobDetail jobDetail = JobBuilder.newJob(SyncNotification.class)
+                .withIdentity("syncNotificationJobDetail",JOB_GROUP_NAME)
+                .usingJobData("detail", "将通知信息存入redis") //设置参数（键值对）
+                .storeDurably() //即使没有Trigger关联时，也不需要删除该JobDetail
+                .build();
+        return jobDetail;
+    }
+
 
     /**
      * 同步问题热榜触发器
@@ -48,6 +80,36 @@ public class QuartzConfig
         Trigger trigger = TriggerBuilder.newTrigger()
                 .forJob(syncPopularQuestionJobDetail())//关联上述的JobDetail
                 .withIdentity("syncQuestionJobTrigger",TRIGGER_GROUP_NAME)//给Trigger起个名字
+                .withSchedule(cronScheduleBuilder)
+                .build();
+        return trigger;
+    }
+
+    @Bean
+    public Trigger syncPraiseJobTrigger()
+    {
+        //每隔2小时执行一次
+        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule("0 0 0/2 * * ?");
+
+        //创建触发器
+        Trigger trigger = TriggerBuilder.newTrigger()
+                .forJob(syncPraiseJobDetail())//关联上述的JobDetail
+                .withIdentity("syncPraiseJobTrigger",TRIGGER_GROUP_NAME)
+                .withSchedule(cronScheduleBuilder)
+                .build();
+        return trigger;
+    }
+
+    @Bean
+    public Trigger syncNotificationJobTrigger()
+    {
+        //每隔2小时执行一次
+        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule("0/5 * * * * ?");
+
+        //创建触发器
+        Trigger trigger = TriggerBuilder.newTrigger()
+                .forJob(syncNotificationJobDetail())//关联上述的JobDetail
+                .withIdentity("syncNotificationJobTrigger",TRIGGER_GROUP_NAME)
                 .withSchedule(cronScheduleBuilder)
                 .build();
         return trigger;

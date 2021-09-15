@@ -39,7 +39,7 @@ public class IndexService {
     }
 
     public PageInfo sortByPopular(int pageNum) {
-        PageHelper.startPage(pageNum,10);
+        //PageHelper.startPage(pageNum,10);
         //List<Question> questionList = questionMapper.sortByCommentCount();
         PageInfo pageInfo = new PageInfo(questionService.getPopularQuestionFromRedis());
         return pageInfo;

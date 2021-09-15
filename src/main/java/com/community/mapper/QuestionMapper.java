@@ -101,4 +101,7 @@ public interface QuestionMapper {
 
     @Select("select update_time from question where id = #{id}")
     long findTimeByQuestionId(int id);
+
+    @Update("update question set praise_count = #{count} where id = #{questionId}")
+    void updatePraiseCount(int questionId,int count);
 }

@@ -11,7 +11,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -30,18 +32,44 @@ public class NotificationService {
 
     public void addNotification(int notifier,int userNotified,int type,int outerId){
         String uuid = "notification:user:"+userNotified;
-        boolean hasKey = redisTemplate.hasKey(uuid);
-        int count = 0;
-        notificationMapper.insertNotification(notifier,userNotified,type,0,outerId,System.currentTimeMillis());
+        String key = "notification:notifier:"+notifier+":userNotified:"+userNotified+":type:"+type+":outerId:"+outerId;
+        boolean hasKey = redisTemplate.hasKey(key);
         if(hasKey){
-            redisTemplate.delete(uuid);
-            count = notificationMapper.findNotificationCount(userNotified);
-            redisTemplate.opsForValue().set(uuid,count,2l, TimeUnit.HOURS);
+            redisTemplate.delete(key);
+//            if(redisTemplate.hasKey(uuid)){
+//                int count = (Integer)redisTemplate.opsForValue().get(uuid);
+//                if(count > 0){
+//                    redisTemplate.opsForValue().decrement(uuid);
+//                }
+//            }else{
+//                notificationMapper.deleteNotification(notifier,userNotified,type,outerId);
+//                redisTemplate.opsForValue().set(uuid,notificationMapper.findNotificationCount(userNotified),2,TimeUnit.HOURS);
+//            }
+            redisTemplate.expire(uuid,2l, TimeUnit.HOURS);
         }else{
-            count = notificationMapper.findNotificationCount(userNotified);
-            redisTemplate.opsForValue().set(uuid,count,2l, TimeUnit.HOURS);
+            //notificationMapper.insertNotification(notifier,userNotified,type,0,outerId,System.currentTimeMillis());
+            //count = notificationMapper.findNotificationCount(userNotified);
+            //redisTemplate.opsForValue().set(uuid,count,2l, TimeUnit.HOURS);
+            //redisTemplate.opsForValue().set(key,1,2,TimeUnit.HOURS);
+            if(notificationMapper.selectNotificationCount(notifier,userNotified,type,outerId)!=0){
+                notificationMapper.deleteNotification(notifier,userNotified,type,outerId);
+//                if(redisTemplate.hasKey(uuid)){
+//                    redisTemplate.opsForValue().decrement(uuid);
+//                }else{
+//                    redisTemplate.opsForValue().set(uuid,notificationMapper.findNotificationCount(userNotified)-1,2,TimeUnit.HOURS);
+//                }
+            }else{
+                notificationMapper.insertNotification(notifier,userNotified,type,0,outerId,System.currentTimeMillis());
+                if(redisTemplate.hasKey(uuid)){
+                    redisTemplate.opsForValue().increment(uuid);
+                }else{
+                    redisTemplate.opsForValue().set(uuid,notificationMapper.findNotificationCount(userNotified)+1,2,TimeUnit.HOURS);
+                }
+            }
         }
+
     }
+
 
     public List<NotificationDTO> notificationContent(int user){
         List<NotificationDTO> notificationDTOList = new ArrayList();
@@ -86,7 +114,26 @@ public class NotificationService {
 
     public void readNotification(int user){
         String uuid = "notification:user:"+user;
-        redisTemplate.opsForValue().set(uuid,0);
-        notificationMapper.setNotificationStatusTrue(user);
+        if(redisTemplate.hasKey(uuid)){
+            redisTemplate.opsForValue().set(uuid,0);
+        }else{
+            notificationMapper.setNotificationStatusTrue(user);
+        }
+
+    }
+
+    public void updateNotificationDetailToDb(){
+        String prefix = "notification:notifier:*";
+        Set<String> set = redisTemplate.keys(prefix);
+        for (String str : set) {
+            String[] s = str.split(":");
+            int notifier = Integer.parseInt(s[2]);
+            int userNotified = Integer.parseInt(s[4]);
+            int type = Integer.parseInt(s[6]);
+            int outerId = Integer.parseInt(s[8]);
+            if(notificationMapper.selectNotificationCount(notifier,userNotified,type,outerId) == 0){
+                notificationMapper.insertNotification(notifier,userNotified,type,0,outerId,System.currentTimeMillis());
+            }
+        }
     }
 }

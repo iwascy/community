@@ -43,4 +43,10 @@ public interface NotificationMapper {
 
     @Delete("update notification set status = 1 where user_notified = #{userNotified} and status = 0 ")
     void setNotificationStatusTrue(int userNotified);
+
+    @Select("select count(*) from notification where notifier = #{notifier} and user_notified = #{userNotifier} and type = #{type} and outer_id = #{outerId}")
+    int selectNotificationCount(int notifier,int userNotifier,int type,int outerId);
+
+    @Update("update notification set create_time = #{time}  where notifier = #{notifier} and user_notified = #{userNotifier} and type = #{type} and outer_id = #{outerId}")
+    void updateNotification(int notifier,int userNotifier,int type,int outerId,long time);
 }

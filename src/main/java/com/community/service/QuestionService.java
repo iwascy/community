@@ -44,6 +44,9 @@ public class QuestionService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private PraiseService praiseService;
+
 
     public int addQuestionViewCount(int questionId){
         String key = "question:" + questionId;
@@ -141,7 +144,8 @@ public class QuestionService {
     }
 
     public int praiseCountById(int id){
-        return questionMapper.findPraiseCount(id);
+
+        return praiseService.getPraiseCount(id);
     };
 
     public QuestionDTO showQuestion(int id){
@@ -230,6 +234,9 @@ public class QuestionService {
 
     public List<QuestionProfileDTO> getPopularQuestionFromRedis(){
         List<QuestionProfileDTO> questionProfileDTOList = new ArrayList<>();
+        if(!redisTemplate.hasKey("question:popular:1")){
+            setPopularQuestionDbToRedis();
+        }
         for (int i = 1; i <= 10; i++) {
             String key = "question:popular:" + i;
             QuestionProfileDTO questionProfileDTO = new QuestionProfileDTO();

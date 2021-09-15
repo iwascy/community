@@ -14,4 +14,6 @@ public interface PraiseMapper {
 
     @Delete("delete from praise where user = #{user} and question = #{question}")
     void deletePraiseByUserAndQuestion(int user,int question);
+
+
 }
