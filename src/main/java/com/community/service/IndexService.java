@@ -26,6 +26,9 @@ public class IndexService {
     private UserService userService;
 
     @Autowired
+    private QuestionService questionService;
+
+    @Autowired
     private QuestionConvert questionConvert;
 
     public PageInfo sortByLatestTime(int pageNum) {
@@ -36,9 +39,9 @@ public class IndexService {
     }
 
     public PageInfo sortByPopular(int pageNum) {
-        PageHelper.startPage(pageNum,5);
-        List<Question> questionList = questionMapper.sortByCommentCount();
-        PageInfo pageInfo = questionConvert.getPageInfo(questionList,pageNum);
+        PageHelper.startPage(pageNum,10);
+        //List<Question> questionList = questionMapper.sortByCommentCount();
+        PageInfo pageInfo = new PageInfo(questionService.getPopularQuestionFromRedis());
         return pageInfo;
     }
 

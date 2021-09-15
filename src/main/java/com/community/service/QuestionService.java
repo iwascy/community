@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class QuestionService {
@@ -34,6 +35,8 @@ public class QuestionService {
     @Autowired
     private CommentService commentService;
 
+    @Autowired
+    private QuestionConvert questionConvert;
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -188,4 +191,58 @@ public class QuestionService {
 
 
 
+    public void setPopularQuestionDbToRedis(){
+        List<QuestionProfileDTO> questionProfileDTOList = new ArrayList<>();
+        List<Question> questionList = questionMapper.sortByCommentCount();
+        for (Question question : questionList) {
+            QuestionProfileDTO questionProfileDTO = new QuestionProfileDTO();
+            questionProfileDTO.setId(question.getId());
+            questionProfileDTO.setName(userService.findUserNameById(question.getCreator()));
+            questionProfileDTO.setCommentCount(question.getCommentCount());
+            questionProfileDTO.setPraiseCount(question.getPraiseCount());
+            questionProfileDTO.setViewCount(question.getViewCount());
+            questionProfileDTO.setTitle(question.getTitle());
+            questionProfileDTO.setTag(question.getTag());
+            int len = question.getDetail().length();
+            if (len > 100) {
+                questionProfileDTO.setDetail(question.getDetail().substring(1, 100) + "......");
+            } else {
+                questionProfileDTO.setDetail(question.getDetail());
+            }
+            questionProfileDTO.setTag(questionProfileDTO.getTag());
+            questionProfileDTOList.add(questionProfileDTO);
+        }
+        int i = 1;
+        for (QuestionProfileDTO questionProfileDTO : questionProfileDTOList) {
+            String key = "question:popular:" + i;
+            redisTemplate.boundHashOps(key).put("id", questionProfileDTO.getId());
+            redisTemplate.boundHashOps(key).put("name", questionProfileDTO.getName());
+            redisTemplate.boundHashOps(key).put("title", questionProfileDTO.getTitle());
+            redisTemplate.boundHashOps(key).put("detail", questionProfileDTO.getDetail());
+            redisTemplate.boundHashOps(key).put("commentCount", questionProfileDTO.getCommentCount());
+            redisTemplate.boundHashOps(key).put("viewCount", questionProfileDTO.getViewCount());
+            redisTemplate.boundHashOps(key).put("praiseCount", questionProfileDTO.getPraiseCount());
+            redisTemplate.boundHashOps(key).put("tag", questionProfileDTO.getTag());
+            redisTemplate.expire(key, 2, TimeUnit.HOURS);
+            i++;
+        }
+    }
+
+    public List<QuestionProfileDTO> getPopularQuestionFromRedis(){
+        List<QuestionProfileDTO> questionProfileDTOList = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            String key = "question:popular:" + i;
+            QuestionProfileDTO questionProfileDTO = new QuestionProfileDTO();
+            questionProfileDTO.setName((String) redisTemplate.boundHashOps(key).get("name"));
+            questionProfileDTO.setId((Integer) redisTemplate.boundHashOps(key).get("id"));
+            questionProfileDTO.setTitle((String) redisTemplate.boundHashOps(key).get("title"));
+            questionProfileDTO.setDetail((String) redisTemplate.boundHashOps(key).get("detail"));
+            questionProfileDTO.setCommentCount((Integer) redisTemplate.boundHashOps(key).get("commentCount"));
+            questionProfileDTO.setViewCount((Integer) redisTemplate.boundHashOps(key).get("viewCount"));
+            questionProfileDTO.setPraiseCount((Integer) redisTemplate.boundHashOps(key).get("praiseCount"));
+            questionProfileDTO.setTag((String) redisTemplate.boundHashOps(key).get("tag"));
+            questionProfileDTOList.add(questionProfileDTO);
+        }
+        return questionProfileDTOList;
+    }
 }

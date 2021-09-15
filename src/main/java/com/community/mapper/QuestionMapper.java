@@ -57,7 +57,7 @@ public interface QuestionMapper {
     @Select("select * from question order by update_time desc")
     List<Question> sortByLatestTime();
 
-    @Select("select * from question order by comment_count DESC")
+    @Select("select * from question order by comment_count DESC LIMIT 0,10")
     List<Question> sortByCommentCount();
 
     /*
