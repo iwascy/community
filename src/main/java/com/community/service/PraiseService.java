@@ -96,7 +96,7 @@ public class PraiseService {
     /**
      * redis更新点赞数量至mysql
      */
-    public void redisToDb(){
+    public void praiseCountRedisToDb(){
         String prefix = "praiseCount:*";
         Set<String> set = redisTemplate.keys(prefix);
         for (String str : set) {
@@ -104,6 +104,17 @@ public class PraiseService {
             int questionId = Integer.valueOf(s[2]);
             int count = (Integer)redisTemplate.opsForValue().get(str);
             questionMapper.updatePraiseCount(questionId,count);
+        }
+    }
+
+    public void praiseDetailRedisToDb(){
+        String prefix = "praise:*";
+        Set<String> set = redisTemplate.keys(prefix);
+        for (String str : set) {
+            String[] s = str.split(":");
+            int questionId = Integer.parseInt(s[2]);
+            int userId = Integer.parseInt(s[4]);
+            praiseMapper.addPraise(userId,questionId,System.currentTimeMillis(),System.currentTimeMillis());
         }
     }
 
@@ -117,7 +128,7 @@ public class PraiseService {
         String praiseCountKey = "praiseCount:question:"+questionId;
         //判断redis是否有点赞的数据
         if(alreadyPraiseInRedis(userId,questionId)){
-            redisTemplate.opsForValue().set(key,0);
+            redisTemplate.opsForValue().set(key,0,2,TimeUnit.HOURS);
             if(redisTemplate.hasKey(praiseCountKey)){
                 redisTemplate.opsForValue().decrement(praiseCountKey);
             }else{
@@ -127,7 +138,7 @@ public class PraiseService {
             //删除通知
             notificationService.addNotification(userId,userNotified,2,questionId);
         }else{
-            redisTemplate.opsForValue().set(key,1);
+            redisTemplate.opsForValue().set(key,1,2,TimeUnit.HOURS);
             if(redisTemplate.hasKey(praiseCountKey)){
                 redisTemplate.opsForValue().increment(praiseCountKey);
             }else{

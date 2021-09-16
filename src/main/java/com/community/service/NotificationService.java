@@ -115,7 +115,7 @@ public class NotificationService {
     public void readNotification(int user){
         String uuid = "notification:user:"+user;
         if(redisTemplate.hasKey(uuid)){
-            redisTemplate.opsForValue().set(uuid,0);
+            redisTemplate.opsForValue().set(uuid,0,2,TimeUnit.HOURS);
         }else{
             notificationMapper.setNotificationStatusTrue(user);
         }

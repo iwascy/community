@@ -64,6 +64,7 @@ public class QuestionService {
                 logger.info("找不到问题，"+e);
             }
             redisTemplate.opsForHash().put(key,viewCountString,count+1);
+            redisTemplate.expire(key,2,TimeUnit.HOURS);
             viewCount = count;
         }
         return viewCount;

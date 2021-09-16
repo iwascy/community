@@ -25,7 +25,8 @@ public class SyncPraise extends QuartzJobBean
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         //任务
-        praiseService.redisToDb();
+        praiseService.praiseCountRedisToDb();
+        praiseService.praiseDetailRedisToDb();
         //打印信息
         System.out.println("----------------------------------------");
         System.out.println("任务：" + detail);
